@@ -1,0 +1,1261 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Gyangmi Eats - Menu</title>
+
+  <style>
+
+    /* =====================================================
+       RESET
+    ===================================================== */
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: #f7f7f7;
+      color: #222;
+      min-height: 100vh;
+    }
+
+    /* =====================================================
+       HEADER
+    ===================================================== */
+
+    header {
+      background: rgba(255, 255, 255, 0.97);
+      padding: 18px 50px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow:
+        0 2px 15px rgba(0, 0, 0, 0.07);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .logo {
+      font-size: 32px;
+      font-weight: 800;
+      color: #ff4b2b;
+      letter-spacing: -1px;
+      cursor: pointer;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .header-link {
+      text-decoration: none;
+      color: #444;
+      font-weight: 600;
+      font-size: 15px;
+      padding: 10px 13px;
+      border-radius: 9px;
+      transition: 0.2s;
+    }
+
+    .header-link:hover {
+      color: #ff4b2b;
+      background: #fff2ee;
+    }
+
+    .cart-link {
+      text-decoration: none;
+      color: #333;
+      font-weight: 700;
+      font-size: 16px;
+      padding: 11px 16px;
+      border-radius: 10px;
+      transition: 0.2s;
+    }
+
+    .cart-link:hover {
+      color: #ff4b2b;
+      background: #fff2ee;
+    }
+
+    /* =====================================================
+       HERO
+    ===================================================== */
+
+    .hero {
+      background:
+        radial-gradient(
+          circle at top right,
+          rgba(255, 75, 43, 0.09),
+          transparent 35%
+        ),
+        linear-gradient(
+          180deg,
+          #ffffff 0%,
+          #fffafa 100%
+        );
+
+      text-align: center;
+      padding: 70px 20px 65px;
+      border-bottom: 1px solid #eeeeee;
+    }
+
+    .hero-badge {
+      display: inline-block;
+      background: #fff0ec;
+      color: #ff4b2b;
+      padding: 8px 16px;
+      border-radius: 30px;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+
+    .hero h1 {
+      font-size: 46px;
+      line-height: 1.2;
+      margin-bottom: 12px;
+      letter-spacing: -1px;
+    }
+
+    .hero p {
+      color: #777;
+      font-size: 18px;
+      line-height: 1.6;
+    }
+
+    /* =====================================================
+       SECTION
+    ===================================================== */
+
+    .section {
+      max-width: 1200px;
+      margin: auto;
+      padding: 60px 30px 75px;
+    }
+
+    .section-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 32px;
+    }
+
+    .section-heading h2 {
+      font-size: 32px;
+      letter-spacing: -0.5px;
+    }
+
+    .section-heading span {
+      color: #777;
+      font-size: 14px;
+    }
+
+    /* =====================================================
+       MENU GRID
+    ===================================================== */
+
+    .menu-list {
+      display: grid;
+      grid-template-columns:
+        repeat(
+          auto-fit,
+          minmax(280px, 1fr)
+        );
+      gap: 28px;
+    }
+
+    /* =====================================================
+       MENU CARD
+    ===================================================== */
+
+    .menu-card {
+      background: white;
+      border-radius: 17px;
+      overflow: hidden;
+      border: 1px solid #eeeeee;
+      box-shadow:
+        0 5px 18px rgba(0, 0, 0, 0.07);
+
+      display: flex;
+      flex-direction: column;
+
+      transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
+    }
+
+    .menu-card:hover {
+      transform: translateY(-6px);
+
+      box-shadow:
+        0 14px 32px rgba(0, 0, 0, 0.12);
+    }
+
+    /* =====================================================
+       MENU IMAGE / STICKER
+    ===================================================== */
+
+    .menu-image {
+      height: 180px;
+
+      background:
+        linear-gradient(
+          135deg,
+          #fff1ed,
+          #f3f3f3
+        );
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      font-size: 72px;
+      position: relative;
+
+      transition: 0.25s;
+    }
+
+    .menu-card:hover .menu-image {
+      background:
+        linear-gradient(
+          135deg,
+          #ffe8e2,
+          #f1f1f1
+        );
+    }
+
+    .menu-image::after {
+      content: "";
+
+      position: absolute;
+
+      width: 90px;
+      height: 14px;
+
+      background:
+        rgba(0, 0, 0, 0.08);
+
+      border-radius: 50%;
+
+      bottom: 30px;
+
+      filter: blur(5px);
+    }
+
+    /* =====================================================
+       MENU CONTENT
+    ===================================================== */
+
+    .menu-content {
+      padding: 23px;
+
+      display: flex;
+      flex-direction: column;
+
+      flex: 1;
+    }
+
+    .menu-content h3 {
+      font-size: 21px;
+      line-height: 1.35;
+      margin-bottom: 9px;
+    }
+
+    .menu-content p {
+      color: #777;
+      font-size: 15px;
+      line-height: 1.55;
+
+      min-height: 47px;
+      margin-bottom: 15px;
+    }
+
+    /* =====================================================
+       PRICE
+    ===================================================== */
+
+    .price {
+      font-size: 21px;
+      font-weight: 800;
+
+      color: #ff4b2b;
+
+      margin-bottom: 17px;
+    }
+
+    /* =====================================================
+       ADD CART BUTTON
+    ===================================================== */
+
+    .add-cart {
+      width: 100%;
+
+      border: none;
+
+      background: #ff4b2b;
+      color: white;
+
+      padding: 14px;
+
+      border-radius: 10px;
+
+      font-weight: 700;
+      font-size: 16px;
+
+      cursor: pointer;
+
+      transition:
+        background 0.2s,
+        transform 0.2s,
+        box-shadow 0.2s;
+
+      margin-top: auto;
+    }
+
+    .add-cart:hover {
+      background: #e83e20;
+
+      transform: translateY(-1px);
+
+      box-shadow:
+        0 7px 16px rgba(255, 75, 43, 0.25);
+    }
+
+    .add-cart:active {
+      transform: translateY(1px);
+    }
+
+    /* =====================================================
+       MESSAGE
+    ===================================================== */
+
+    .message {
+      text-align: center;
+
+      padding: 70px 20px;
+
+      color: #777;
+      font-size: 18px;
+
+      grid-column: 1 / -1;
+    }
+
+    .message-icon {
+      font-size: 40px;
+      margin-bottom: 12px;
+    }
+
+    .error {
+      color: #d93025;
+    }
+
+    /* =====================================================
+       FOOTER
+    ===================================================== */
+
+    footer {
+      background: #222;
+      color: white;
+
+      text-align: center;
+
+      padding: 35px 20px;
+
+      margin-top: 5px;
+    }
+
+    .footer-logo {
+      color: #ff5a3c;
+
+      font-size: 21px;
+
+      font-weight: 700;
+
+      margin-bottom: 8px;
+    }
+
+    footer p {
+      color: #ddd;
+      font-size: 14px;
+    }
+
+    /* =====================================================
+       MOBILE
+    ===================================================== */
+
+    @media (max-width: 700px) {
+
+      header {
+        padding: 15px 20px;
+      }
+
+      .logo {
+        font-size: 27px;
+      }
+
+      .header-link {
+        display: none;
+      }
+
+      .cart-link {
+        font-size: 15px;
+        padding: 9px 11px;
+      }
+
+      .hero {
+        padding: 55px 20px;
+      }
+
+      .hero h1 {
+        font-size: 35px;
+      }
+
+      .hero p {
+        font-size: 16px;
+      }
+
+      .section {
+        padding: 45px 20px 55px;
+      }
+
+      .section-heading {
+        display: block;
+        text-align: center;
+      }
+
+      .section-heading h2 {
+        font-size: 29px;
+        margin-bottom: 7px;
+      }
+
+      .menu-list {
+        grid-template-columns: 1fr;
+        gap: 22px;
+      }
+
+      .menu-image {
+        height: 170px;
+      }
+
+      .menu-content {
+        padding: 21px;
+      }
+    }
+
+    @media (max-width: 400px) {
+
+      .hero h1 {
+        font-size: 31px;
+      }
+
+      .menu-image {
+        height: 160px;
+      }
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+
+  <!-- =====================================================
+       HEADER
+  ===================================================== -->
+
+  <header>
+
+    <div
+      class="logo"
+      onclick="window.location.href='/'"
+    >
+      Gyangmi Eats
+    </div>
+
+    <div class="header-right">
+
+      <a
+        class="header-link"
+        href="/orders.html"
+      >
+        📦 Orders
+      </a>
+
+      <a
+        class="header-link"
+        href="/favorites.html"
+      >
+        ❤️ Favorites
+      </a>
+
+      <a
+        class="cart-link"
+        href="/cart.html"
+      >
+        🛒 Cart
+      </a>
+
+    </div>
+
+  </header>
+
+
+  <!-- =====================================================
+       RESTAURANT HERO
+  ===================================================== -->
+
+  <section class="hero">
+
+    <div class="hero-badge">
+      🍽️ Fresh & Delicious
+    </div>
+
+    <h1 id="restaurantName">
+      Loading...
+    </h1>
+
+    <p id="restaurantDescription">
+      Please wait...
+    </p>
+
+  </section>
+
+
+  <!-- =====================================================
+       MENU SECTION
+  ===================================================== -->
+
+  <section class="section">
+
+    <div class="section-heading">
+
+      <div>
+
+        <h2>
+          Menu
+        </h2>
+
+        <span>
+          Choose your favorite food
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <div
+      id="menuList"
+      class="menu-list"
+    >
+
+      <div class="message">
+
+        <div class="message-icon">
+          🍽️
+        </div>
+
+        Loading menu...
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =====================================================
+       FOOTER
+  ===================================================== -->
+
+  <footer>
+
+    <div class="footer-logo">
+      Gyangmi Eats
+    </div>
+
+    <p>
+      © 2026 Gyangmi Eats. All rights reserved.
+    </p>
+
+  </footer>
+
+
+  <!-- =====================================================
+       JAVASCRIPT
+  ===================================================== -->
+
+  <script>
+
+    // =====================================================
+    // ELEMENTS
+    // =====================================================
+
+    const restaurantName =
+      document.getElementById(
+        "restaurantName"
+      );
+
+    const restaurantDescription =
+      document.getElementById(
+        "restaurantDescription"
+      );
+
+    const menuList =
+      document.getElementById(
+        "menuList"
+      );
+
+
+    // =====================================================
+    // START
+    // =====================================================
+
+    loadMenu();
+
+
+    // =====================================================
+    // LOAD MENU
+    // =====================================================
+
+    async function loadMenu() {
+
+      try {
+
+        // -------------------------------------------------
+        // GET RESTAURANT ID FROM URL
+        // -------------------------------------------------
+
+        const params =
+          new URLSearchParams(
+            window.location.search
+          );
+
+        const restaurantId =
+          params.get("restaurant_id") ||
+          params.get("restaurant");
+
+        console.log(
+          "URL:",
+          window.location.href
+        );
+
+        console.log(
+          "Restaurant ID:",
+          restaurantId
+        );
+
+
+        // -------------------------------------------------
+        // IF ID IS MISSING
+        // -------------------------------------------------
+
+        if (!restaurantId) {
+
+          window.location.href = "/";
+
+          return;
+
+        }
+
+
+        // =================================================
+        // LOAD RESTAURANTS
+        // =================================================
+
+        const restaurantsResponse =
+          await fetch(
+            "/restaurants"
+          );
+
+
+        if (!restaurantsResponse.ok) {
+
+          throw new Error(
+            "Restaurant API failed: " +
+            restaurantsResponse.status
+          );
+
+        }
+
+
+        const restaurants =
+          await restaurantsResponse.json();
+
+
+        console.log(
+          "Restaurants:",
+          restaurants
+        );
+
+
+        // =================================================
+        // FIND SELECTED RESTAURANT
+        // =================================================
+
+        const selectedRestaurant =
+          restaurants.find(
+            restaurant =>
+              Number(restaurant.id) ===
+              Number(restaurantId)
+          );
+
+
+        if (!selectedRestaurant) {
+
+          restaurantName.textContent =
+            "Restaurant not found";
+
+          restaurantDescription.textContent =
+            "ID: " + restaurantId;
+
+          menuList.innerHTML = `
+            <div class="message error">
+              ❌ Restaurant ID
+              ${escapeHtml(restaurantId)}
+              not found.
+            </div>
+          `;
+
+          return;
+
+        }
+
+
+        // =================================================
+        // SHOW RESTAURANT INFORMATION
+        // =================================================
+
+        restaurantName.textContent =
+          selectedRestaurant.name;
+
+        restaurantDescription.textContent =
+          selectedRestaurant.description ||
+          "Delicious food waiting for you.";
+
+
+        // =================================================
+        // LOAD MENUS
+        // =================================================
+
+        const menusResponse =
+          await fetch(
+            "/menus"
+          );
+
+
+        if (!menusResponse.ok) {
+
+          throw new Error(
+            "Menu API failed: " +
+            menusResponse.status
+          );
+
+        }
+
+
+        const menus =
+          await menusResponse.json();
+
+
+        console.log(
+          "Menus:",
+          menus
+        );
+
+
+        // =================================================
+        // FILTER MENU
+        // =================================================
+
+        const restaurantMenus =
+          menus.filter(
+            menu =>
+              Number(menu.restaurant_id) ===
+              Number(restaurantId)
+          );
+
+
+        console.log(
+          "Selected menus:",
+          restaurantMenus
+        );
+
+
+        // =================================================
+        // NO MENU
+        // =================================================
+
+        if (
+          restaurantMenus.length === 0
+        ) {
+
+          menuList.innerHTML = `
+
+            <div class="message">
+
+              <div class="message-icon">
+                🍽️
+              </div>
+
+              No menu available.
+
+            </div>
+
+          `;
+
+          return;
+
+        }
+
+
+        // =================================================
+        // RESTAURANT-SPECIFIC MENU STICKERS
+        // =================================================
+        //
+        // Restaurant ID अनुसार छुट्टाछुट्टै emoji
+        //
+        // ID 1 = Chatpate / Snacks
+        // ID 2 = Momo / Dumplings
+        // ID 3 = Nepali Khaja
+        // ID 4 = Sekuwa / Grill
+        //
+        // =================================================
+
+        const restaurantEmojis = {
+
+          1: [
+            "🌶️",
+            "🥣",
+            "",
+            "",
+            "🍘",
+            "🌶️"
+          ],
+
+          2: [
+            "🥟",
+            "🥟",
+            "🥟",
+            "🥟",
+            "🍜",
+            "🥟"
+          ],
+
+          3: [
+            "🍛",
+            "🥘",
+            "🍲",
+            "🍲",
+            "🥘",
+            "🍛"
+          ],
+
+          4: [
+            "🍶🍢",
+            "🍶🍖",
+            "🥂",
+            "🧃🥤",
+            "🍢",
+            "🍗",
+            "🥩",
+            "🍶",
+            "🍖"
+          ]
+
+        };
+
+
+        // -------------------------------------------------
+        // DEFAULT EMOJIS
+        // -------------------------------------------------
+        //
+        // यदि पछि restaurant ID 5, 6 आदि थपियो भने
+        // menu खाली नदेखियोस् भनेर fallback
+        //
+
+        const defaultEmojis = [
+
+          "🍽️",
+          "🍜",
+          "🍛",
+          "🌶️",
+          "🍗",
+          "🍚",
+          "🥘",
+          "🥟"
+
+        ];
+
+
+        // =================================================
+        // GET EMOJIS FOR CURRENT RESTAURANT
+        // =================================================
+
+        const currentEmojis =
+          restaurantEmojis[
+            Number(restaurantId)
+          ] || defaultEmojis;
+
+
+        // =================================================
+        // DISPLAY MENU
+        // =================================================
+
+        menuList.innerHTML =
+          restaurantMenus
+            .map(
+              (menu, index) => {
+
+                // Restaurant-specific emoji
+                const emoji =
+                  currentEmojis[
+                    index %
+                    currentEmojis.length
+                  ];
+
+
+                return `
+
+                  <div
+                    class="menu-card"
+                  >
+
+                    <div
+                      class="menu-image"
+                    >
+
+                      ${emoji}
+
+                    </div>
+
+
+                    <div
+                      class="menu-content"
+                    >
+
+                      <h3>
+
+                        ${escapeHtml(
+                          menu.name
+                        )}
+
+                      </h3>
+
+
+                      <p>
+
+                        ${
+                          escapeHtml(
+                            menu.description ||
+                            "Delicious food prepared fresh for you."
+                          )
+                        }
+
+                      </p>
+
+
+                      <div
+                        class="price"
+                      >
+
+                        ¥${Number(
+                          menu.price
+                        ).toLocaleString()}
+
+                      </div>
+
+
+                      <button
+                        class="add-cart"
+                        onclick="addToCart(
+                          ${Number(menu.id)},
+                          '${escapeJs(menu.name)}',
+                          ${Number(menu.price)},
+                          ${Number(restaurantId)}
+                        )"
+                      >
+
+                        🛒 Add to Cart
+
+                      </button>
+
+                    </div>
+
+                  </div>
+
+                `;
+
+              }
+            )
+            .join("");
+
+
+      }
+
+      catch (error) {
+
+        console.error(
+          "ERROR:",
+          error
+        );
+
+
+        restaurantName.textContent =
+          "Error";
+
+
+        restaurantDescription.textContent =
+          "Could not load restaurant.";
+
+
+        menuList.innerHTML = `
+
+          <div class="message error">
+
+            ❌ Failed to load menu.
+
+            <br>
+            <br>
+
+            <small>
+
+              ${escapeHtml(
+                error.message
+              )}
+
+            </small>
+
+          </div>
+
+        `;
+
+      }
+
+    }
+
+
+    // =====================================================
+    // ADD TO CART
+    // =====================================================
+
+    function addToCart(
+      id,
+      name,
+      price,
+      restaurantId
+    ) {
+
+      let cart =
+        JSON.parse(
+          localStorage.getItem(
+            "foodgo_cart"
+          ) || "[]"
+        );
+
+
+      // -------------------------------------------------
+      // KEEP ONE RESTAURANT PER ORDER
+      // -------------------------------------------------
+
+      const currentRestaurantId =
+        Number(restaurantId);
+
+
+      const differentRestaurant =
+        cart.find(
+          item =>
+            Number(item.restaurant_id) !==
+            currentRestaurantId
+        );
+
+
+      if (differentRestaurant) {
+
+        alert(
+          "You can order from one restaurant at a time. Please checkout or clear the current cart first."
+        );
+
+        return;
+
+      }
+
+
+      // -------------------------------------------------
+      // CHECK EXISTING ITEM
+      // -------------------------------------------------
+
+      const existing =
+        cart.find(
+          item =>
+            Number(item.id) ===
+            Number(id)
+        );
+
+
+      if (existing) {
+
+        existing.quantity =
+          Number(
+            existing.quantity || 0
+          ) + 1;
+
+
+        // Make sure restaurant_id exists
+        if (
+          !existing.restaurant_id
+        ) {
+
+          existing.restaurant_id =
+            Number(restaurantId);
+
+        }
+
+      }
+
+      else {
+
+        cart.push({
+
+          id:
+            Number(id),
+
+          restaurant_id:
+            Number(restaurantId),
+
+          name:
+            name,
+
+          price:
+            Number(price),
+
+          quantity:
+            1
+
+        });
+
+      }
+
+
+      // -------------------------------------------------
+      // SAVE CART
+      // -------------------------------------------------
+
+      localStorage.setItem(
+        "foodgo_cart",
+        JSON.stringify(cart)
+      );
+
+
+      console.log(
+        "Cart:",
+        cart
+      );
+
+
+      // -------------------------------------------------
+      // SUCCESS MESSAGE
+      // -------------------------------------------------
+
+      alert(
+        name +
+        " added to cart!"
+      );
+
+    }
+
+
+    // =====================================================
+    // HTML SAFETY
+    // =====================================================
+
+    function escapeHtml(
+      value
+    ) {
+
+      return String(value)
+
+        .replace(
+          /&/g,
+          "&amp;"
+        )
+
+        .replace(
+          /</g,
+          "&lt;"
+        )
+
+        .replace(
+          />/g,
+          "&gt;"
+        )
+
+        .replace(
+          /"/g,
+          "&quot;"
+        )
+
+        .replace(
+          /'/g,
+          "&#039;"
+        );
+
+    }
+
+
+    // =====================================================
+    // JAVASCRIPT STRING SAFETY
+    // =====================================================
+
+    function escapeJs(
+      value
+    ) {
+
+      return String(value)
+
+        .replace(
+          /\\/g,
+          "\\\\"
+        )
+
+        .replace(
+          /'/g,
+          "\\'"
+        )
+
+        .replace(
+          /"/g,
+          '\\"'
+        )
+
+        .replace(
+          /\r?\n/g,
+          "\\n"
+        );
+
+    }
+
+  </script>
+
+</body>
+
+</html>

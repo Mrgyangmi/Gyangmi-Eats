@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Gyangmi Eats - My Favorites</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #f5f5f5;
+      color: #222;
+    }
+
+    header {
+      background: #ff6b00;
+      color: white;
+      padding: 18px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    header h1 {
+      font-size: 25px;
+    }
+
+    header a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      margin-left: 20px;
+    }
+
+    .container {
+      width: 92%;
+      max-width: 1000px;
+      margin: 30px auto;
+    }
+
+    .title {
+      margin-bottom: 25px;
+    }
+
+    .title h2 {
+      color: #ff6b00;
+      margin-bottom: 8px;
+    }
+
+    .title p {
+      color: #777;
+    }
+
+    .favorites-grid {
+      display: grid;
+      grid-template-columns:
+        repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .favorite-card {
+      background: white;
+      border-radius: 15px;
+      padding: 22px;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+      position: relative;
+    }
+
+    .heart {
+      font-size: 38px;
+      margin-bottom: 12px;
+    }
+
+    .favorite-card h3 {
+      color: #ff6b00;
+      margin-bottom: 8px;
+      font-size: 20px;
+    }
+
+    .description {
+      color: #666;
+      line-height: 1.5;
+      min-height: 45px;
+      margin-bottom: 18px;
+    }
+
+    .favorite-id {
+      color: #999;
+      font-size: 13px;
+      margin-bottom: 15px;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      border: none;
+      padding: 11px 16px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .menu-btn {
+      background: #ff6b00;
+      color: white;
+    }
+
+    .menu-btn:hover {
+      background: #e85d00;
+    }
+
+    .remove-btn {
+      background: #eee;
+      color: #444;
+    }
+
+    .remove-btn:hover {
+      background: #ddd;
+    }
+
+    .empty {
+      background: white;
+      padding: 50px 25px;
+      text-align: center;
+      border-radius: 15px;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.06);
+    }
+
+    .empty .big-heart {
+      font-size: 55px;
+      margin-bottom: 15px;
+    }
+
+    .empty h3 {
+      margin-bottom: 8px;
+    }
+
+    .empty p {
+      color: #777;
+      margin-bottom: 20px;
+    }
+
+    .home-btn {
+      display: inline-block;
+      background: #ff6b00;
+      color: white;
+      text-decoration: none;
+      padding: 12px 22px;
+      border-radius: 8px;
+      font-weight: bold;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 40px;
+      color: #777;
+    }
+
+    .error {
+      background: #ffe8e8;
+      color: #c00;
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+    }
+
+    .message {
+      position: fixed;
+      top: 80px;
+      right: 20px;
+      background: #222;
+      color: white;
+      padding: 14px 20px;
+      border-radius: 10px;
+      display: none;
+      z-index: 1000;
+    }
+
+    @media (max-width: 600px) {
+      header {
+        padding: 15px;
+      }
+
+      header h1 {
+        font-size: 20px;
+      }
+
+      header a {
+        margin-left: 10px;
+        font-size: 14px;
+      }
+
+      .container {
+        width: 95%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+
+    <h1>❤️ Gyangmi Eats Favorites</h1>
+
+    <div>
+      <a href="/">Home</a>
+      <a href="/cart.html">Cart</a>
+    </div>
+
+  </header>
+
+
+  <div class="container">
+
+    <div class="title">
+
+      <h2>My Favorite Restaurants ❤️</h2>
+
+      <p>
+        Restaurants you have saved to your favorites.
+      </p>
+
+    </div>
+
+
+    <div id="message" class="message"></div>
+
+
+    <div id="favorites">
+
+      <div class="loading">
+        Loading favorites...
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <script>
+
+    const params =
+      new URLSearchParams(window.location.search);
+
+
+    // Logged-in user (URL user_id is kept as a backward-compatible fallback)
+    let storedUser = null;
+    try {
+      storedUser = JSON.parse(
+        localStorage.getItem("gyangmiUser") ||
+        localStorage.getItem("user") ||
+        "null"
+      );
+    } catch (error) {
+      storedUser = null;
+    }
+
+    const userId =
+      Number(storedUser?.id) ||
+      Number(params.get("user_id")) ||
+      1;
+
+
+    async function getData(url) {
+
+      const response =
+        await fetch(url);
+
+      if (!response.ok) {
+        throw new Error(
+          "Failed to load " + url
+        );
+      }
+
+      return await response.json();
+    }
+
+
+    function escapeHTML(value) {
+
+      if (
+        value === null ||
+        value === undefined
+      ) {
+        return "";
+      }
+
+      return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+    }
+
+
+    function showMessage(text) {
+
+      const message =
+        document.getElementById("message");
+
+      message.textContent = text;
+
+      message.style.display = "block";
+
+
+      setTimeout(() => {
+
+        message.style.display = "none";
+
+      }, 2500);
+
+    }
+
+
+    async function loadFavorites() {
+
+      try {
+
+        const [
+          favorites,
+          restaurants
+        ] = await Promise.all([
+
+          getData("/favorites"),
+
+          getData("/restaurants")
+
+        ]);
+
+
+        const myFavorites =
+          favorites
+            .filter(
+              item =>
+                Number(item.user_id) ===
+                userId
+            )
+            .sort(
+              (a, b) =>
+                Number(b.id) -
+                Number(a.id)
+            );
+
+
+        const container =
+          document.getElementById(
+            "favorites"
+          );
+
+
+        if (myFavorites.length === 0) {
+
+          container.innerHTML = `
+
+            <div class="empty">
+
+              <div class="big-heart">
+                ❤️
+              </div>
+
+              <h3>
+                No favorite restaurants yet
+              </h3>
+
+              <p>
+                Add your favorite restaurants
+                and they will appear here.
+              </p>
+
+              <a
+                href="/"
+                class="home-btn"
+              >
+                Browse Restaurants
+              </a>
+
+            </div>
+
+          `;
+
+          return;
+        }
+
+
+        let html = `
+
+          <div class="favorites-grid">
+
+        `;
+
+
+        myFavorites.forEach(favorite => {
+
+          const restaurant =
+            restaurants.find(
+              r =>
+                Number(r.id) ===
+                Number(
+                  favorite.restaurant_id
+                )
+            );
+
+
+          if (!restaurant) {
+            return;
+          }
+
+
+          html += `
+
+            <div
+              class="favorite-card"
+              id="favorite-${favorite.id}"
+            >
+
+              <div class="heart">
+                ❤️
+              </div>
+
+
+              <h3>
+                ${escapeHTML(
+                  restaurant.name
+                )}
+              </h3>
+
+
+              <div class="description">
+                ${escapeHTML(
+                  restaurant.description ||
+                  "Gyangmi Eats Restaurant"
+                )}
+              </div>
+
+
+              <div class="favorite-id">
+                Favorite ID:
+                #${favorite.id}
+              </div>
+
+
+              <div class="buttons">
+
+                <button
+                  class="menu-btn"
+                  onclick="
+                    openMenu(
+                      ${restaurant.id}
+                    )
+                  "
+                >
+                  🍽️ View Menu
+                </button>
+
+
+                <button
+                  class="remove-btn"
+                  onclick="
+                    removeFavorite(
+                      ${favorite.id}
+                    )
+                  "
+                >
+                  ❌ Remove
+                </button>
+
+              </div>
+
+            </div>
+
+          `;
+
+        });
+
+
+        html += `
+          </div>
+        `;
+
+
+        container.innerHTML = html;
+
+      }
+
+      catch (error) {
+
+        console.error(error);
+
+        document.getElementById(
+          "favorites"
+        ).innerHTML = `
+
+          <div class="error">
+
+            ❌ Failed to load favorites.
+
+            <br><br>
+
+            Make sure the Gyangmi Eats server
+            is running.
+
+          </div>
+
+        `;
+
+      }
+
+    }
+
+
+    function openMenu(restaurantId) {
+
+      window.location.href =
+        "/menu.html?restaurant_id=" +
+        restaurantId;
+
+    }
+
+
+    async function removeFavorite(
+      favoriteId
+    ) {
+
+      const confirmed =
+        confirm(
+          "Remove this restaurant from favorites?"
+        );
+
+
+      if (!confirmed) {
+        return;
+      }
+
+
+      try {
+
+        const response =
+          await fetch(
+            "/favorites/" +
+            favoriteId,
+            {
+              method: "DELETE"
+            }
+          );
+
+
+        const result =
+          await response.text();
+
+
+        if (!response.ok) {
+
+          throw new Error(result);
+
+        }
+
+
+        showMessage(
+          "❤️ Removed from favorites"
+        );
+
+
+        loadFavorites();
+
+      }
+
+      catch (error) {
+
+        console.error(error);
+
+        showMessage(
+          "❌ Remove failed"
+        );
+
+      }
+
+    }
+
+
+    loadFavorites();
+
+  </script>
+
+</body>
+</html>

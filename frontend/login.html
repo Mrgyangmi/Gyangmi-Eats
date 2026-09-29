@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Login - Gyangmi Eats</title>
+
+  <meta
+    name="description"
+    content="Login to Gyangmi Eats and order delicious food online."
+  />
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #208aef, #0b5fc6);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .login-container {
+      width: 100%;
+      max-width: 420px;
+    }
+
+    .login-card {
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 35px 30px;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+    }
+
+    .logo {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .logo-icon {
+      width: 70px;
+      height: 70px;
+      margin: 0 auto 15px;
+      background: #208aef;
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 34px;
+      font-weight: bold;
+    }
+
+    .logo h1 {
+      color: #208aef;
+      font-size: 30px;
+      margin-bottom: 8px;
+    }
+
+    .logo p {
+      color: #777;
+      font-size: 14px;
+      margin-bottom: 28px;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 14px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 14px 15px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      font-size: 16px;
+      outline: none;
+      transition: 0.2s;
+    }
+
+    .form-group input:focus {
+      border-color: #208aef;
+      box-shadow: 0 0 0 3px rgba(32, 138, 239, 0.12);
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 15px;
+      border: none;
+      border-radius: 10px;
+      background: #208aef;
+      color: white;
+      font-size: 17px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.2s;
+      margin-top: 5px;
+    }
+
+    .login-btn:hover {
+      background: #0b70d8;
+    }
+
+    .login-btn:disabled {
+      background: #8abce9;
+      cursor: not-allowed;
+    }
+
+    .message {
+      display: none;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 18px;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    .error {
+      background: #ffe8e8;
+      color: #d60000;
+      border: 1px solid #ffb5b5;
+    }
+
+    .success {
+      background: #e8fff0;
+      color: #08752c;
+      border: 1px solid #a8e8bd;
+    }
+
+    .links {
+      text-align: center;
+      margin-top: 22px;
+    }
+
+    .links p {
+      color: #666;
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+
+    .links a {
+      color: #208aef;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .links a:hover {
+      text-decoration: underline;
+    }
+
+    .home-link {
+      display: block;
+      text-align: center;
+      margin-top: 20px;
+      color: #777;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .home-link:hover {
+      color: #208aef;
+    }
+
+    .show-password {
+      display: flex !important;
+      align-items: center;
+      gap: 7px;
+      margin-top: 8px;
+      font-size: 13px !important;
+      color: #666 !important;
+      cursor: pointer;
+      font-weight: normal !important;
+    }
+
+    .show-password input {
+      width: auto;
+    }
+
+    @media (max-width: 480px) {
+      .login-card {
+        padding: 30px 20px;
+      }
+
+      .logo h1 {
+        font-size: 26px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="login-container">
+
+    <div class="login-card">
+
+      <div class="logo">
+        <div class="logo-icon">G</div>
+
+        <h1>Gyangmi Eats</h1>
+
+        <p>Welcome back! Please login to continue.</p>
+      </div>
+
+      <div id="message" class="message"></div>
+
+      <!-- novalidate prevents Safari's old native pattern error -->
+      <form id="loginForm" novalidate>
+
+        <div class="form-group">
+
+          <label for="email">Email</label>
+
+          <input
+            type="email"
+            id="email"
+            name="email"
+            placeholder="Enter your email"
+            autocomplete="email"
+          />
+
+        </div>
+
+        <div class="form-group">
+
+          <label for="password">Password</label>
+
+          <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="Enter your password"
+            autocomplete="current-password"
+          />
+
+          <label class="show-password">
+            <input type="checkbox" id="showPassword" />
+            Show password
+          </label>
+
+        </div>
+
+        <button
+          type="submit"
+          class="login-btn"
+          id="loginBtn"
+        >
+          Login
+        </button>
+
+      </form>
+
+      <div class="links">
+
+        <p>
+          Don't have an account?
+          <a href="register.html">Create Account</a>
+        </p>
+
+      </div>
+
+      <a href="index.html" class="home-link">
+        ← Back to Gyangmi Eats
+      </a>
+
+    </div>
+
+  </div>
+
+  <script>
+
+    const API_URL = "";
+
+    const loginForm = document.getElementById("loginForm");
+    const loginBtn = document.getElementById("loginBtn");
+    const message = document.getElementById("message");
+
+    const emailInput = document.getElementById("email");
+    const passwordInput = document.getElementById("password");
+    const showPassword = document.getElementById("showPassword");
+
+
+    // ==============================
+    // SHOW / HIDE PASSWORD
+    // ==============================
+
+    showPassword.addEventListener("change", function () {
+
+      passwordInput.type = this.checked
+        ? "text"
+        : "password";
+
+    });
+
+
+    // ==============================
+    // SHOW MESSAGE
+    // ==============================
+
+    function showMessage(text, type) {
+
+      message.textContent = text;
+
+      message.className = "message " + type;
+
+      message.style.display = "block";
+
+    }
+
+
+    // ==============================
+    // EMAIL VALIDATION
+    // ==============================
+
+    function isValidEmail(email) {
+
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+    }
+
+
+    // ==============================
+    // LOGIN
+    // ==============================
+
+    loginForm.addEventListener("submit", async function (event) {
+
+      event.preventDefault();
+
+      const email = emailInput.value.trim();
+
+      const password = passwordInput.value;
+
+
+      // Empty email
+      if (!email) {
+
+        showMessage(
+          "Please enter your email.",
+          "error"
+        );
+
+        emailInput.focus();
+
+        return;
+
+      }
+
+
+      // Invalid email
+      if (!isValidEmail(email)) {
+
+        showMessage(
+          "Please enter a valid email address.",
+          "error"
+        );
+
+        emailInput.focus();
+
+        return;
+
+      }
+
+
+      // Empty password
+      if (!password) {
+
+        showMessage(
+          "Please enter your password.",
+          "error"
+        );
+
+        passwordInput.focus();
+
+        return;
+
+      }
+
+
+      // Disable button
+      loginBtn.disabled = true;
+
+      loginBtn.textContent = "Logging in...";
+
+      message.style.display = "none";
+
+
+      try {
+
+        const response = await fetch("/login", {
+
+          method: "POST",
+
+          headers: {
+            "Content-Type": "application/json"
+          },
+
+          body: JSON.stringify({
+            email: email,
+            password: password
+          })
+
+        });
+
+
+        const data = await response.json();
+
+
+        if (!response.ok) {
+
+          throw new Error(
+            data.message ||
+            data.error ||
+            "Invalid email or password."
+          );
+
+        }
+
+
+        // ==============================
+        // SAVE USER
+        // ==============================
+
+        const user = data.user || data;
+
+
+        localStorage.setItem(
+          "gyangmiUser",
+          JSON.stringify(user)
+        );
+
+
+        // Compatibility with old frontend
+        localStorage.setItem(
+          "user",
+          JSON.stringify(user)
+        );
+
+
+        // ==============================
+        // SUCCESS
+        // ==============================
+
+        showMessage(
+          "Login successful! Redirecting...",
+          "success"
+        );
+
+
+        setTimeout(() => {
+
+          window.location.href = "/";
+
+        }, 800);
+
+
+      } catch (error) {
+
+        console.error("Login error:", error);
+
+        showMessage(
+          error.message ||
+          "Login failed. Please try again.",
+          "error"
+        );
+
+
+      } finally {
+
+        loginBtn.disabled = false;
+
+        loginBtn.textContent = "Login";
+
+      }
+
+    });
+
+  </script>
+
+</body>
+</html>

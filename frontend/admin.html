@@ -1,0 +1,2100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Gyangmi Eats Admin - Orders</title>
+
+  <style>
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body {
+      background: #f7f7f7;
+      color: #222;
+      min-height: 100vh;
+    }
+
+    /* =========================
+       HEADER
+    ========================= */
+
+    header {
+      background: #ff5a1f;
+      color: white;
+      padding: 22px 7%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.12);
+    }
+
+    .logo {
+      color: white;
+      text-decoration: none;
+      font-size: 34px;
+      font-weight: 800;
+    }
+
+    nav {
+      display: flex;
+      gap: 40px;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    nav a:hover {
+      opacity: 0.85;
+    }
+
+    /* =========================
+       MAIN
+    ========================= */
+
+    .container {
+      width: 90%;
+      max-width: 1100px;
+      margin: 45px auto;
+    }
+
+    .page-title {
+      text-align: center;
+      margin-bottom: 35px;
+    }
+
+    .page-title h1 {
+      font-size: 48px;
+      margin-bottom: 10px;
+    }
+
+    .page-title p {
+      color: #777;
+      font-size: 21px;
+    }
+
+    /* =========================
+       LOADING
+    ========================= */
+
+    .loading {
+      text-align: center;
+      padding: 70px 20px;
+      color: #777;
+      font-size: 23px;
+    }
+
+    /* =========================
+       ERROR
+    ========================= */
+
+    .error {
+      background: #fff0f0;
+      color: #d93025;
+      border-radius: 15px;
+      padding: 25px;
+      text-align: center;
+      font-size: 19px;
+      margin-bottom: 25px;
+    }
+
+    /* =========================
+       SUCCESS
+    ========================= */
+
+    .success {
+      background: #e9f8ed;
+      color: #187a32;
+      border-radius: 15px;
+      padding: 18px 22px;
+      margin-bottom: 25px;
+      font-size: 18px;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    /* =========================
+       ORDER CARD
+    ========================= */
+
+    .order-card {
+      background: white;
+      border-radius: 24px;
+      padding: 35px;
+      margin-bottom: 30px;
+      box-shadow: 0 5px 25px rgba(0,0,0,0.08);
+    }
+
+    /* =========================
+       ORDER HEADER
+    ========================= */
+
+    .order-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 25px;
+      margin-bottom: 25px;
+    }
+
+    .order-number {
+      font-size: 32px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .order-date {
+      color: #777;
+      font-size: 18px;
+    }
+
+    .status-badge {
+      padding: 12px 22px;
+      border-radius: 30px;
+      font-weight: 800;
+      font-size: 17px;
+      background: #fff1c7;
+      color: #8a6500;
+    }
+
+    /* =========================
+       INFO GRID
+    ========================= */
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .info-box {
+      background: #fafafa;
+      border-radius: 16px;
+      padding: 23px;
+      min-height: 105px;
+    }
+
+    .info-label {
+      color: #888;
+      font-size: 15px;
+      font-weight: 800;
+      text-transform: uppercase;
+      margin-bottom: 9px;
+    }
+
+    .info-value {
+      font-size: 20px;
+      font-weight: 700;
+      word-break: break-word;
+    }
+
+    /* =========================
+       TOTAL
+    ========================= */
+
+    .total-section {
+      border-top: 1px solid #eee;
+      padding-top: 25px;
+      margin-top: 5px;
+      margin-bottom: 25px;
+    }
+
+    .total-label {
+      color: #777;
+      font-size: 20px;
+      margin-bottom: 5px;
+    }
+
+    .total-price {
+      color: #ff5a1f;
+      font-size: 34px;
+      font-weight: 800;
+    }
+
+    /* =========================
+       STATUS UPDATE
+    ========================= */
+
+    .update-section {
+      border-top: 1px solid #eee;
+      padding-top: 25px;
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+
+    .status-select {
+      flex: 1;
+      height: 55px;
+      border: 1px solid #ccc;
+      border-radius: 12px;
+      padding: 0 15px;
+      font-size: 20px;
+      background: white;
+      color: #222;
+      cursor: pointer;
+    }
+
+    .update-btn {
+      height: 55px;
+      background: #ff5a1f;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 0 30px;
+      font-size: 18px;
+      font-weight: 800;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .update-btn:hover {
+      background: #e94c16;
+    }
+
+    .update-btn:disabled {
+      background: #aaa;
+      cursor: not-allowed;
+    }
+
+    /* =========================
+       VIEW DETAILS
+    ========================= */
+
+    .details-btn {
+      display: inline-block;
+      margin-top: 20px;
+      background: #222;
+      color: white;
+      text-decoration: none;
+      padding: 13px 25px;
+      border-radius: 12px;
+      font-size: 17px;
+      font-weight: 700;
+    }
+
+    .details-btn:hover {
+      background: #444;
+    }
+
+    /* =========================
+       EMPTY
+    ========================= */
+
+    .empty {
+      background: white;
+      border-radius: 20px;
+      padding: 70px 20px;
+      text-align: center;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.07);
+    }
+
+    .empty h2 {
+      font-size: 30px;
+      margin-bottom: 10px;
+    }
+
+    .empty p {
+      color: #777;
+      font-size: 19px;
+    }
+
+    /* =========================
+       DELIVERY MANAGEMENT
+    ========================= */
+
+    .delivery-section {
+      margin-top: 50px;
+      background: white;
+      border-radius: 22px;
+      padding: 30px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+      border: 1px solid #eee;
+    }
+
+    .delivery-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-bottom: 25px;
+    }
+
+    .delivery-title {
+      font-size: 30px;
+      margin-bottom: 7px;
+    }
+
+    .delivery-subtitle {
+      color: #777;
+      font-size: 16px;
+    }
+
+    .refresh-btn {
+      border: none;
+      background: #111;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    .refresh-btn:hover {
+      background: #333;
+    }
+
+    .delivery-table-wrapper {
+      overflow-x: auto;
+    }
+
+    .delivery-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.delivery-table th,
+.delivery-table td {
+  word-wrap: break-word;
+  overflow-wrap: anywhere;
+}
+
+.delivery-table th:nth-child(1),
+.delivery-table td:nth-child(1) {
+  width: 90px;
+}
+
+.delivery-table th:nth-child(2),
+.delivery-table td:nth-child(2) {
+  width: 100px;
+}
+
+.delivery-table th:nth-child(3),
+.delivery-table td:nth-child(3) {
+  width: 180px;
+}
+
+.delivery-table th:nth-child(4),
+.delivery-table td:nth-child(4) {
+  width: 180px;
+}
+
+.delivery-table th:nth-child(5),
+.delivery-table td:nth-child(5) {
+  width: 110px;
+}
+.delivery-table-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.delivery-table {
+  min-width: 700px;
+}
+
+.delivery-table th,
+.delivery-table td {
+  padding: 12px 10px;
+  font-size: 14px;
+}
+
+.delivery-select {
+  min-width: 140px;
+  width: 100%;
+  font-size: 14px;
+}
+
+.delivery-update-btn {
+  width: 100%;
+  padding: 10px 12px;
+  font-size: 14px;
+}
+
+    .delivery-table th {
+      padding: 16px;
+      text-align: left;
+      background: #f7f7f7;
+      border-bottom: 1px solid #ddd;
+      font-size: 15px;
+    }
+
+    .delivery-table td {
+      padding: 16px;
+      border-bottom: 1px solid #eee;
+      vertical-align: middle;
+    }
+
+    .delivery-select {
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      min-width: 160px;
+      background: white;
+      font-size: 14px;
+    }
+
+    .delivery-update-btn {
+      border: none;
+      background: #ff5a1f;
+      color: white;
+      padding: 10px 18px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .delivery-update-btn:hover {
+      background: #e94c16;
+    }
+
+    .delivery-update-btn:disabled {
+      background: #aaa;
+      cursor: not-allowed;
+    }
+
+    .delivery-message {
+      margin-bottom: 20px;
+    }
+
+    .delivery-success {
+      background: #e8f7e8;
+      color: #176b17;
+      padding: 14px 16px;
+      border-radius: 10px;
+      font-weight: 700;
+    }
+
+    .delivery-error {
+      background: #fff0f0;
+      color: #c62828;
+      padding: 14px 16px;
+      border-radius: 10px;
+      font-weight: 700;
+    }
+
+    .no-deliveries {
+      padding: 35px;
+      text-align: center;
+      color: #777;
+    }
+
+    /* =========================
+       RESPONSIVE
+    ========================= */
+
+    @media (max-width: 850px) {
+
+      header {
+        padding: 18px 5%;
+      }
+
+      .logo {
+        font-size: 27px;
+      }
+
+      nav {
+        gap: 18px;
+      }
+
+      nav a {
+        font-size: 17px;
+      }
+
+      .container {
+        width: 92%;
+        margin-top: 30px;
+      }
+
+      .page-title h1 {
+        font-size: 38px;
+      }
+
+      .page-title p {
+        font-size: 18px;
+      }
+
+      .info-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .order-header {
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .update-section {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .status-select {
+        width: 100%;
+      }
+
+      .update-btn {
+        width: 100%;
+      }
+
+      .order-card {
+        padding: 25px;
+      }
+
+      .delivery-section {
+        padding: 20px;
+      }
+
+      .delivery-title {
+        font-size: 25px;
+      }
+
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+  <!-- =========================
+       HEADER
+  ========================= -->
+
+  <header>
+
+    <a href="/" class="logo">
+      🍔 Gyangmi Eats Admin
+    </a>
+
+    <nav>
+      <a href="/">Home</a>
+      <a href="/admin.html">My Orders</a>
+    </nav>
+
+  </header>
+
+
+  <!-- =========================
+       MAIN
+  ========================= -->
+
+  <main class="container">
+
+    <div class="page-title">
+
+      <h1>Orders</h1>
+
+      <p>
+        Manage Gyangmi Eats customer orders
+      </p>
+
+    </div>
+
+
+    <div id="message"></div>
+
+
+    <!-- =========================
+         ORDERS
+    ========================= -->
+
+    <div id="orders">
+
+      <div class="loading">
+        Loading orders...
+      </div>
+
+    </div>
+
+
+    <!-- =========================
+         DELIVERY MANAGEMENT
+    ========================= -->
+
+    <section
+      id="deliveryManagementSection"
+      class="delivery-section"
+    >
+
+      <div class="delivery-header">
+
+        <div>
+
+          <h2 class="delivery-title">
+            🚚 Delivery Management
+          </h2>
+
+          <p class="delivery-subtitle">
+            Assign drivers and manage delivery status
+          </p>
+
+        </div>
+
+
+        <button
+          class="refresh-btn"
+          onclick="loadDeliveryManagement()"
+        >
+          🔄 Refresh
+        </button>
+
+      </div>
+
+
+      <div
+        id="deliveryMessage"
+        class="delivery-message"
+      ></div>
+
+
+      <div class="delivery-table-wrapper">
+
+        <table class="delivery-table">
+
+          <thead>
+
+            <tr>
+
+              <th>
+                Delivery ID
+              </th>
+
+              <th>
+                Order
+              </th>
+
+              <th>
+                Driver
+              </th>
+
+              <th>
+                Status
+              </th>
+
+              <th>
+                Action
+              </th>
+
+            </tr>
+
+          </thead>
+
+
+          <tbody id="deliveryTableBody">
+
+            <tr>
+
+              <td
+                colspan="5"
+                class="no-deliveries"
+              >
+                Loading deliveries...
+              </td>
+
+            </tr>
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <script>
+
+    /* =====================================================
+       GLOBAL DATA
+    ===================================================== */
+
+    let allOrders = [];
+
+    let allRestaurants = [];
+
+
+    /* =====================================================
+       HTML ESCAPE
+    ===================================================== */
+
+    function escapeHtml(value) {
+
+      return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+    }
+
+
+    /* =====================================================
+       PRICE
+    ===================================================== */
+
+    function formatPrice(price) {
+
+      const number =
+        Number(price || 0);
+
+      return "¥" +
+        number.toLocaleString("ja-JP");
+
+    }
+
+
+    /* =====================================================
+       DATE
+    ===================================================== */
+
+    function formatDate(value) {
+
+      if (!value) {
+
+        return "Date not available";
+
+      }
+
+      const date =
+        new Date(value);
+
+      if (isNaN(date.getTime())) {
+
+        return escapeHtml(value);
+
+      }
+
+      return date.toLocaleString(
+        "ja-JP",
+        {
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+          hour: "2-digit",
+          minute: "2-digit"
+        }
+      );
+
+    }
+
+
+    /* =====================================================
+       GET DATA
+    ===================================================== */
+
+    async function getData(url) {
+
+      const response =
+        await fetch(url);
+
+      if (!response.ok) {
+
+        throw new Error(
+          `${url} returned ${response.status}`
+        );
+
+      }
+
+      return await response.json();
+
+    }
+
+
+    /* =====================================================
+       LOAD ORDERS
+    ===================================================== */
+
+    async function loadOrders() {
+
+      const ordersContainer =
+        document.getElementById("orders");
+
+      try {
+
+        const [
+          orders,
+          restaurants
+        ] = await Promise.all([
+
+          getData("/orders"),
+
+          getData("/restaurants")
+
+        ]);
+
+
+        allOrders =
+          Array.isArray(orders)
+            ? orders
+            : [];
+
+
+        allRestaurants =
+          Array.isArray(restaurants)
+            ? restaurants
+            : [];
+
+
+        renderOrders();
+
+      } catch (error) {
+
+        console.error(
+          "Admin order loading error:",
+          error
+        );
+
+
+        ordersContainer.innerHTML = `
+
+          <div class="error">
+
+            Failed to load orders.
+
+            <br><br>
+
+            ${escapeHtml(
+              error.message
+            )}
+
+          </div>
+
+        `;
+
+      }
+
+    }
+
+
+    /* =====================================================
+       RESTAURANT NAME
+    ===================================================== */
+
+    function getRestaurantName(
+      restaurantId
+    ) {
+
+      const restaurant =
+        allRestaurants.find(
+          r =>
+            String(r.id) ===
+            String(restaurantId)
+        );
+
+
+      if (!restaurant) {
+
+        return "Restaurant not available";
+
+      }
+
+
+      return restaurant.name ||
+        "Restaurant";
+
+    }
+
+
+    /* =====================================================
+       ORDER STATUS OPTIONS
+    ===================================================== */
+
+    const statusOptions = [
+
+      "Pending",
+
+      "Confirmed",
+
+      "Preparing",
+
+      "Out for Delivery",
+
+      "Delivered",
+
+      "Cancelled"
+
+    ];
+
+
+    /* =====================================================
+       RENDER ORDERS
+    ===================================================== */
+
+    function renderOrders() {
+
+      const container =
+        document.getElementById("orders");
+
+
+      if (!allOrders.length) {
+
+        container.innerHTML = `
+
+          <div class="empty">
+
+            <h2>
+              No Orders Yet
+            </h2>
+
+            <p>
+              Customer orders will appear here.
+            </p>
+
+          </div>
+
+        `;
+
+        return;
+
+      }
+
+
+      const orders =
+        [...allOrders].sort(
+          (a, b) =>
+            Number(b.id) -
+            Number(a.id)
+        );
+
+
+      let html = "";
+
+
+      orders.forEach(order => {
+
+        const restaurantName =
+          getRestaurantName(
+            order.restaurant_id
+          );
+
+
+        const total =
+          Number(
+            order.total_amount ??
+            order.total ??
+            0
+          );
+
+
+        const currentStatus =
+          order.status ||
+          "Pending";
+
+
+        const options =
+          statusOptions
+            .map(status => `
+
+              <option
+                value="${escapeHtml(status)}"
+                ${
+                  status ===
+                  currentStatus
+                    ? "selected"
+                    : ""
+                }
+              >
+                ${escapeHtml(status)}
+              </option>
+
+            `)
+            .join("");
+
+
+        html += `
+
+          <div
+            class="order-card"
+            id="order-card-${escapeHtml(order.id)}"
+          >
+
+            <div class="order-header">
+
+              <div>
+
+                <div class="order-number">
+
+                  Order #
+                  ${escapeHtml(order.id)}
+
+                </div>
+
+                <div class="order-date">
+
+                  ${formatDate(
+                    order.created_at ||
+                    order.order_date ||
+                    order.createdAt
+                  )}
+
+                </div>
+
+              </div>
+
+
+              <div
+                class="status-badge"
+                id="status-badge-${escapeHtml(order.id)}"
+              >
+
+                ${escapeHtml(currentStatus)}
+
+              </div>
+
+            </div>
+
+
+            <div class="info-grid">
+
+              <div class="info-box">
+
+                <div class="info-label">
+                  Restaurant
+                </div>
+
+                <div class="info-value">
+
+                  ${escapeHtml(
+                    restaurantName
+                  )}
+
+                </div>
+
+              </div>
+
+
+              <div class="info-box">
+
+                <div class="info-label">
+                  User ID
+                </div>
+
+                <div class="info-value">
+
+                  #${escapeHtml(
+                    order.user_id
+                  )}
+
+                </div>
+
+              </div>
+
+
+              <div class="info-box">
+
+                <div class="info-label">
+                  Order ID
+                </div>
+
+                <div class="info-value">
+
+                  #${escapeHtml(
+                    order.id
+                  )}
+
+                </div>
+
+              </div>
+
+            </div>
+
+
+            <div class="total-section">
+
+              <div class="total-label">
+                Order Total
+              </div>
+
+              <div class="total-price">
+
+                ${formatPrice(total)}
+
+              </div>
+
+            </div>
+
+
+            <div class="update-section">
+
+              <select
+                class="status-select"
+                id="status-${escapeHtml(order.id)}"
+              >
+
+                ${options}
+
+              </select>
+
+
+              <button
+                class="update-btn"
+                id="update-btn-${escapeHtml(order.id)}"
+                onclick="
+                  updateOrderStatus(
+                    ${Number(order.id)}
+                  )
+                "
+              >
+
+                Update Status
+
+              </button>
+
+            </div>
+
+
+            <a
+              class="details-btn"
+              href="/order-details.html?order_id=${encodeURIComponent(order.id)}"
+            >
+
+              View Order Details
+
+            </a>
+
+          </div>
+
+        `;
+
+      });
+
+
+      container.innerHTML =
+        html;
+
+    }
+
+
+    /* =====================================================
+       UPDATE ORDER STATUS
+    ===================================================== */
+
+    async function updateOrderStatus(
+      orderId
+    ) {
+
+      const select =
+        document.getElementById(
+          `status-${orderId}`
+        );
+
+
+      const button =
+        document.getElementById(
+          `update-btn-${orderId}`
+        );
+
+
+      const badge =
+        document.getElementById(
+          `status-badge-${orderId}`
+        );
+
+
+      if (!select) {
+
+        alert(
+          "Status select not found."
+        );
+
+        return;
+
+      }
+
+
+      const newStatus =
+        select.value;
+
+
+      if (!newStatus) {
+
+        alert(
+          "Please select a status."
+        );
+
+        return;
+
+      }
+
+
+      const oldText =
+        button.textContent;
+
+
+      button.disabled =
+        true;
+
+      button.textContent =
+        "Updating...";
+
+
+      try {
+
+        const response =
+          await fetch(
+            `/orders/${orderId}/status`,
+            {
+
+              method: "PATCH",
+
+              headers: {
+
+                "Content-Type":
+                  "application/json",
+
+                "Accept":
+                  "application/json"
+
+              },
+
+              body:
+                JSON.stringify({
+                  status:
+                    newStatus
+                })
+
+            }
+          );
+
+
+        const responseText =
+          await response.text();
+
+
+        if (!response.ok) {
+
+          throw new Error(
+            responseText ||
+            `Server error: ${response.status}`
+          );
+
+        }
+
+
+        const order =
+          allOrders.find(
+            o =>
+              String(o.id) ===
+              String(orderId)
+          );
+
+
+        if (order) {
+
+          order.status =
+            newStatus;
+
+        }
+
+
+        if (badge) {
+
+          badge.textContent =
+            newStatus;
+
+        }
+
+
+        showMessage(
+          `Order #${orderId} status updated to "${newStatus}".`,
+          "success"
+        );
+
+
+        button.textContent =
+          "Updated ✓";
+
+
+        setTimeout(() => {
+
+          button.textContent =
+            oldText;
+
+          button.disabled =
+            false;
+
+        }, 1200);
+
+
+      } catch (error) {
+
+        console.error(
+          "Status update error:",
+          error
+        );
+
+
+        showMessage(
+          `Failed to update Order #${orderId}: ${error.message}`,
+          "error"
+        );
+
+
+        button.textContent =
+          oldText;
+
+        button.disabled =
+          false;
+
+      }
+
+    }
+
+
+    /* =====================================================
+       MESSAGE
+    ===================================================== */
+
+    function showMessage(
+      text,
+      type
+    ) {
+
+      const message =
+        document.getElementById(
+          "message"
+        );
+
+
+      if (type === "success") {
+
+        message.innerHTML = `
+
+          <div class="success">
+
+            ✓
+            ${escapeHtml(text)}
+
+          </div>
+
+        `;
+
+      } else {
+
+        message.innerHTML = `
+
+          <div class="error">
+
+            ✕
+            ${escapeHtml(text)}
+
+          </div>
+
+        `;
+
+      }
+
+
+      setTimeout(() => {
+
+        message.innerHTML =
+          "";
+
+      }, 4000);
+
+    }
+
+
+    /* =====================================================
+       DELIVERY ESCAPE
+    ===================================================== */
+
+    function escapeDeliveryText(
+      value
+    ) {
+
+      return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+    }
+
+
+    /* =====================================================
+       DELIVERY MESSAGE
+    ===================================================== */
+
+    function showDeliveryMessage(
+      text,
+      type
+    ) {
+
+      const message =
+        document.getElementById(
+          "deliveryMessage"
+        );
+
+
+      if (!message) {
+        return;
+      }
+
+
+      if (type === "success") {
+
+        message.innerHTML = `
+
+          <div class="delivery-success">
+
+            ✅
+            ${escapeDeliveryText(text)}
+
+          </div>
+
+        `;
+
+      } else {
+
+        message.innerHTML = `
+
+          <div class="delivery-error">
+
+            ❌
+            ${escapeDeliveryText(text)}
+
+          </div>
+
+        `;
+
+      }
+
+
+      setTimeout(() => {
+
+        message.innerHTML =
+          "";
+
+      }, 4000);
+
+    }
+
+
+    /* =====================================================
+       LOAD DELIVERY MANAGEMENT
+    ===================================================== */
+
+    async function loadDeliveryManagement() {
+
+      const tableBody =
+        document.getElementById(
+          "deliveryTableBody"
+        );
+
+
+      if (tableBody) {
+
+        tableBody.innerHTML = `
+
+          <tr>
+
+            <td
+              colspan="5"
+              class="no-deliveries"
+            >
+              Loading deliveries...
+            </td>
+
+          </tr>
+
+        `;
+
+      }
+
+
+      try {
+
+        const [
+
+          ordersResponse,
+
+          driversResponse,
+
+          deliveriesResponse
+
+        ] = await Promise.all([
+
+          fetch("/orders"),
+
+          fetch("/delivery-drivers"),
+
+          fetch("/deliveries")
+
+        ]);
+
+
+        if (!ordersResponse.ok) {
+
+          throw new Error(
+            "Orders load failed"
+          );
+
+        }
+
+
+        if (!driversResponse.ok) {
+
+          throw new Error(
+            "Drivers load failed"
+          );
+
+        }
+
+
+        if (!deliveriesResponse.ok) {
+
+          throw new Error(
+            "Deliveries load failed"
+          );
+
+        }
+
+
+        const orders =
+          await ordersResponse.json();
+
+
+        const drivers =
+          await driversResponse.json();
+
+
+        const deliveries =
+          await deliveriesResponse.json();
+
+
+        if (!Array.isArray(deliveries) ||
+            deliveries.length === 0) {
+
+          tableBody.innerHTML = `
+
+            <tr>
+
+              <td
+                colspan="5"
+                class="no-deliveries"
+              >
+
+                No deliveries found.
+
+              </td>
+
+            </tr>
+
+          `;
+
+          return;
+
+        }
+
+
+        tableBody.innerHTML =
+          deliveries
+            .map(
+              delivery => {
+
+                const order =
+                  orders.find(
+                    o =>
+                      Number(o.id) ===
+                      Number(
+                        delivery.order_id
+                      )
+                  );
+
+
+                const currentStatus =
+                  delivery.status ||
+                  "Assigned";
+
+
+                const driverOptions =
+                  drivers
+                    .map(
+                      driver => `
+
+                        <option
+                          value="${escapeDeliveryText(driver.id)}"
+                          ${
+                            Number(driver.id) ===
+                            Number(
+                              delivery.driver_id
+                            )
+                              ? "selected"
+                              : ""
+                          }
+                        >
+
+                          ${escapeDeliveryText(
+                            driver.name ||
+                            "Driver"
+                          )}
+
+                        </option>
+
+                      `
+                    )
+                    .join("");
+
+
+                return `
+
+                  <tr>
+
+                    <td>
+
+                      <strong>
+                        #${escapeDeliveryText(
+                          delivery.id
+                        )}
+                      </strong>
+
+                    </td>
+
+
+                    <td>
+
+                      <strong>
+                        #${escapeDeliveryText(
+                          delivery.order_id
+                        )}
+                      </strong>
+
+                      ${
+                        order
+                          ? `
+                            <div
+                              style="
+                                font-size:12px;
+                                color:#777;
+                                margin-top:5px;
+                              "
+                            >
+
+                              ¥${Number(
+                                order.total_amount ||
+                                order.total ||
+                                0
+                              ).toLocaleString(
+                                "ja-JP"
+                              )}
+
+                            </div>
+                          `
+                          : ""
+                      }
+
+                    </td>
+
+
+                    <td>
+
+                      <select
+                        class="delivery-select"
+                        id="driver-${delivery.id}"
+                      >
+
+                        ${
+                          driverOptions ||
+                          `
+                            <option value="">
+                              No driver available
+                            </option>
+                          `
+                        }
+
+                      </select>
+
+                    </td>
+
+
+                    <td>
+
+                      <select
+                        class="delivery-select"
+                        id="delivery-status-${delivery.id}"
+                      >
+
+                        <option
+                          value="Assigned"
+                          ${
+                            currentStatus ===
+                            "Assigned"
+                              ? "selected"
+                              : ""
+                          }
+                        >
+                          Assigned
+                        </option>
+
+
+                        <option
+                          value="Picked Up"
+                          ${
+                            currentStatus ===
+                            "Picked Up"
+                              ? "selected"
+                              : ""
+                          }
+                        >
+                          Picked Up
+                        </option>
+
+
+                        <option
+                          value="Out for Delivery"
+                          ${
+                            currentStatus ===
+                            "Out for Delivery"
+                              ? "selected"
+                              : ""
+                          }
+                        >
+                          Out for Delivery
+                        </option>
+
+
+                        <option
+                          value="Delivered"
+                          ${
+                            currentStatus ===
+                            "Delivered"
+                              ? "selected"
+                              : ""
+                          }
+                        >
+                          Delivered
+                        </option>
+
+
+                        <option
+                          value="Cancelled"
+                          ${
+                            currentStatus ===
+                            "Cancelled"
+                              ? "selected"
+                              : ""
+                          }
+                        >
+                          Cancelled
+                        </option>
+
+                      </select>
+
+                    </td>
+
+
+                    <td>
+
+                      <button
+                        class="delivery-update-btn"
+                        id="delivery-update-${delivery.id}"
+                        onclick="
+                          updateDelivery(
+                            ${Number(
+                              delivery.id
+                            )}
+                          )
+                        "
+                      >
+
+                        Update
+
+                      </button>
+
+                    </td>
+
+                  </tr>
+
+                `;
+
+              }
+            )
+            .join("");
+
+
+      } catch (error) {
+
+        console.error(
+          "Delivery Management Error:",
+          error
+        );
+
+
+        if (tableBody) {
+
+          tableBody.innerHTML = `
+
+            <tr>
+
+              <td
+                colspan="5"
+                class="no-deliveries"
+                style="color:#d93025;"
+              >
+
+                Failed to load delivery management.
+
+                <br><br>
+
+                ${escapeDeliveryText(
+                  error.message
+                )}
+
+              </td>
+
+            </tr>
+
+          `;
+
+        }
+
+      }
+
+    }
+
+
+    /* =====================================================
+       UPDATE DELIVERY
+    ===================================================== */
+
+    async function updateDelivery(
+      deliveryId
+    ) {
+
+      const driverSelect =
+        document.getElementById(
+          "driver-" +
+          deliveryId
+        );
+
+
+      const statusSelect =
+        document.getElementById(
+          "delivery-status-" +
+          deliveryId
+        );
+
+
+      const button =
+        document.getElementById(
+          "delivery-update-" +
+          deliveryId
+        );
+
+
+      if (!driverSelect ||
+          !statusSelect) {
+
+        alert(
+          "Delivery information not found."
+        );
+
+        return;
+
+      }
+
+
+      const driverId =
+        driverSelect.value;
+
+
+      const status =
+        statusSelect.value;
+
+
+      if (!driverId) {
+
+        alert(
+          "Please select a driver."
+        );
+
+        return;
+
+      }
+
+
+      if (!status) {
+
+        alert(
+          "Please select delivery status."
+        );
+
+        return;
+
+      }
+
+
+      if (button) {
+
+        button.disabled =
+          true;
+
+        button.textContent =
+          "Updating...";
+
+      }
+
+
+      try {
+
+        /* =========================================
+           UPDATE DELIVERY STATUS
+        ========================================= */
+
+        const statusResponse =
+          await fetch(
+            `/deliveries/${deliveryId}/status`,
+            {
+
+              method: "PATCH",
+
+              headers: {
+
+                "Content-Type":
+                  "application/json"
+
+              },
+
+              body:
+                JSON.stringify({
+                  status:
+                    status
+                })
+
+            }
+          );
+
+
+        const statusText =
+          await statusResponse.text();
+
+
+        if (!statusResponse.ok) {
+
+          throw new Error(
+            statusText ||
+            "Delivery status update failed"
+          );
+
+        }
+
+
+        /* =========================================
+           UPDATE DRIVER
+        ========================================= */
+
+        const driverResponse =
+          await fetch(
+            `/deliveries/${deliveryId}/driver`,
+            {
+
+              method: "PATCH",
+
+              headers: {
+
+                "Content-Type":
+                  "application/json"
+
+              },
+
+              body:
+                JSON.stringify({
+                  driver_id:
+                    Number(driverId)
+                })
+
+            }
+          );
+
+
+        const driverText =
+          await driverResponse.text();
+
+
+        if (!driverResponse.ok) {
+
+          throw new Error(
+            driverText ||
+            "Driver assignment failed"
+          );
+
+        }
+
+
+        showDeliveryMessage(
+          `Delivery #${deliveryId} updated successfully!`,
+          "success"
+        );
+
+
+        await loadDeliveryManagement();
+
+
+      } catch (error) {
+
+        console.error(
+          "Delivery update failed:",
+          error
+        );
+
+
+        showDeliveryMessage(
+          `Delivery #${deliveryId} update failed: ${error.message}`,
+          "error"
+        );
+
+
+        if (button) {
+
+          button.disabled =
+            false;
+
+          button.textContent =
+            "Update";
+
+        }
+
+      }
+
+    }
+
+
+    /* =====================================================
+       START
+    ===================================================== */
+
+    loadOrders();
+
+    loadDeliveryManagement();
+
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,65 @@
+{
+    "end": "2026-09-19 16:00:42",
+    "dataBytes": 3128,
+    "tableDataBytes": {
+        "foodgo": {
+            "Addresses": 325,
+            "OrderItems": 98,
+            "Cart": 24,
+            "Deliveries": 164,
+            "DeliveryDrivers": 70,
+            "Menus": 1065,
+            "Restaurants": 280,
+            "CartItems": 0,
+            "FoodCategories": 128,
+            "Foods": 141,
+            "Coupons": 56,
+            "Payments": 175,
+            "Reviews": 95,
+            "Orders": 305,
+            "Favorites": 0,
+            "RestaurantCategories": 71,
+            "Users": 131
+        }
+    },
+    "tableRows": {
+        "foodgo": {
+            "Addresses": 4,
+            "OrderItems": 6,
+            "Cart": 1,
+            "Deliveries": 4,
+            "DeliveryDrivers": 1,
+            "Menus": 16,
+            "Restaurants": 4,
+            "CartItems": 0,
+            "FoodCategories": 11,
+            "Foods": 2,
+            "Coupons": 1,
+            "Payments": 5,
+            "Reviews": 2,
+            "Orders": 7,
+            "Favorites": 0,
+            "RestaurantCategories": 6,
+            "Users": 2
+        }
+    },
+    "chunkFileBytes": {
+        "foodgo@Addresses@@0.tsv.zst": 325,
+        "foodgo@Cart@@0.tsv.zst": 24,
+        "foodgo@Deliveries@@0.tsv.zst": 164,
+        "foodgo@DeliveryDrivers@@0.tsv.zst": 70,
+        "foodgo@Menus@@0.tsv.zst": 1065,
+        "foodgo@FoodCategories@@0.tsv.zst": 128,
+        "foodgo@CartItems@@0.tsv.zst": 0,
+        "foodgo@Payments@@0.tsv.zst": 175,
+        "foodgo@Orders@@0.tsv.zst": 305,
+        "foodgo@Foods@@0.tsv.zst": 141,
+        "foodgo@RestaurantCategories@@0.tsv.zst": 71,
+        "foodgo@OrderItems@@0.tsv.zst": 98,
+        "foodgo@Coupons@@0.tsv.zst": 56,
+        "foodgo@Users@@0.tsv.zst": 131,
+        "foodgo@Reviews@@0.tsv.zst": 95,
+        "foodgo@Restaurants@@0.tsv.zst": 280,
+        "foodgo@Favorites@@0.tsv.zst": 0
+    }
+}

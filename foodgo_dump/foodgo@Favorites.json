@@ -1,0 +1,30 @@
+{
+    "options": {
+        "schema": "foodgo",
+        "table": "Favorites",
+        "columns": [
+            "id",
+            "user_id",
+            "restaurant_id",
+            "created_at"
+        ],
+        "defaultCharacterSet": "utf8mb4",
+        "fieldsTerminatedBy": "\t",
+        "fieldsEnclosedBy": "",
+        "fieldsOptionallyEnclosed": false,
+        "fieldsEscapedBy": "\\",
+        "linesTerminatedBy": "\n"
+    },
+    "triggers": [],
+    "includesData": true,
+    "includesDdl": true,
+    "extension": "tsv.zst",
+    "chunking": true,
+    "compression": "zstd",
+    "primaryIndex": [
+        "id"
+    ],
+    "hasPKE": false,
+    "partitions": [],
+    "basenames": {}
+}

@@ -1,0 +1,1304 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Gyangmi Eats - Checkout</title>
+
+  <style>
+
+    /* =====================================================
+       RESET
+    ===================================================== */
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+
+    body {
+      background: #f7f7f7;
+      color: #222;
+      min-height: 100vh;
+    }
+
+
+    /* =====================================================
+       HEADER
+    ===================================================== */
+
+    header {
+      background: rgba(255, 255, 255, 0.97);
+
+      padding: 18px 50px;
+
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      box-shadow:
+        0 2px 15px rgba(0, 0, 0, 0.07);
+
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+
+    .logo {
+      font-size: 32px;
+      font-weight: 800;
+
+      color: #ff4b2b;
+
+      letter-spacing: -1px;
+
+      cursor: pointer;
+    }
+
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+
+    .header-link {
+      text-decoration: none;
+
+      color: #444;
+
+      font-weight: 600;
+      font-size: 15px;
+
+      padding: 10px 13px;
+
+      border-radius: 9px;
+
+      transition: 0.2s;
+    }
+
+
+    .header-link:hover {
+      color: #ff4b2b;
+      background: #fff2ee;
+    }
+
+
+    .back {
+      text-decoration: none;
+
+      color: #444;
+
+      font-weight: 700;
+      font-size: 15px;
+
+      padding: 10px 15px;
+
+      border-radius: 9px;
+
+      transition: 0.2s;
+    }
+
+
+    .back:hover {
+      color: #ff4b2b;
+      background: #fff2ee;
+    }
+
+
+    /* =====================================================
+       CONTAINER
+    ===================================================== */
+
+    .container {
+      max-width: 1000px;
+
+      margin: 0 auto;
+
+      padding: 50px 25px 70px;
+    }
+
+
+    .page-heading {
+      margin-bottom: 32px;
+    }
+
+
+    .page-heading h1 {
+      font-size: 38px;
+
+      margin-bottom: 8px;
+
+      letter-spacing: -0.7px;
+    }
+
+
+    .page-heading p {
+      color: #777;
+
+      font-size: 16px;
+    }
+
+
+    /* =====================================================
+       CARDS
+    ===================================================== */
+
+    .card {
+      background: white;
+
+      border-radius: 16px;
+
+      padding: 27px;
+
+      margin-bottom: 23px;
+
+      border: 1px solid #eeeeee;
+
+      box-shadow:
+        0 5px 18px rgba(0, 0, 0, 0.06);
+    }
+
+
+    .card h2 {
+      margin-bottom: 22px;
+
+      font-size: 23px;
+
+      color: #222;
+    }
+
+
+    /* =====================================================
+       ORDER ITEMS
+    ===================================================== */
+
+    .order-item {
+      display: flex;
+
+      justify-content: space-between;
+
+      align-items: center;
+
+      gap: 20px;
+
+      padding: 16px 0;
+
+      border-bottom: 1px solid #eeeeee;
+    }
+
+
+    .order-item:last-child {
+      border-bottom: none;
+    }
+
+
+    .item-name {
+      font-weight: 700;
+
+      font-size: 16px;
+
+      margin-bottom: 6px;
+    }
+
+
+    .item-details {
+      color: #777;
+
+      font-size: 14px;
+    }
+
+
+    .item-price {
+      color: #ff4b2b;
+
+      font-weight: 800;
+
+      font-size: 17px;
+
+      white-space: nowrap;
+    }
+
+
+    /* =====================================================
+       SUMMARY
+    ===================================================== */
+
+    .summary-box {
+      margin-top: 17px;
+
+      padding-top: 8px;
+    }
+
+
+    .summary-row {
+      display: flex;
+
+      justify-content: space-between;
+
+      align-items: center;
+
+      padding: 10px 0;
+
+      font-size: 17px;
+
+      color: #555;
+    }
+
+
+    .summary-row strong {
+      color: #222;
+    }
+
+
+    .total {
+      border-top: 1px solid #dddddd;
+
+      margin-top: 9px;
+
+      padding-top: 18px;
+
+      font-size: 25px;
+
+      font-weight: 800;
+
+      color: #ff4b2b;
+    }
+
+
+    .total span:last-child {
+      color: #ff4b2b;
+    }
+
+
+    /* =====================================================
+       FORM
+    ===================================================== */
+
+    .form-group {
+      margin-bottom: 17px;
+    }
+
+
+    .form-group:last-child {
+      margin-bottom: 0;
+    }
+
+
+    label {
+      display: block;
+
+      margin-bottom: 8px;
+
+      font-weight: 700;
+
+      font-size: 15px;
+
+      color: #333;
+    }
+
+
+    input,
+    textarea,
+    select {
+      width: 100%;
+
+      padding: 14px 15px;
+
+      border: 1px solid #dddddd;
+
+      border-radius: 10px;
+
+      background: #fff;
+
+      color: #222;
+
+      font-size: 16px;
+
+      outline: none;
+
+      transition:
+        border-color 0.2s,
+        box-shadow 0.2s;
+    }
+
+
+    input:focus,
+    textarea:focus,
+    select:focus {
+      border-color: #ff4b2b;
+
+      box-shadow:
+        0 0 0 3px rgba(255, 75, 43, 0.10);
+    }
+
+
+    textarea {
+      min-height: 105px;
+
+      resize: vertical;
+    }
+
+
+    input::placeholder,
+    textarea::placeholder {
+      color: #aaa;
+    }
+
+
+    /* =====================================================
+       PAYMENT
+    ===================================================== */
+
+    .payment-note {
+      background: #fff7f4;
+
+      border: 1px solid #ffe1d8;
+
+      border-radius: 10px;
+
+      padding: 12px 14px;
+
+      color: #777;
+
+      font-size: 14px;
+
+      margin-top: 2px;
+
+      margin-bottom: 18px;
+    }
+
+
+    /* =====================================================
+       PLACE ORDER
+    ===================================================== */
+
+    .place-order {
+      width: 100%;
+
+      padding: 16px;
+
+      border: none;
+
+      border-radius: 10px;
+
+      background: #ff4b2b;
+
+      color: white;
+
+      font-size: 18px;
+
+      font-weight: 800;
+
+      cursor: pointer;
+
+      transition:
+        background 0.2s,
+        transform 0.2s,
+        box-shadow 0.2s;
+    }
+
+
+    .place-order:hover {
+      background: #e83e20;
+
+      transform: translateY(-1px);
+
+      box-shadow:
+        0 8px 20px rgba(255, 75, 43, 0.22);
+    }
+
+
+    .place-order:active {
+      transform: translateY(1px);
+    }
+
+
+    .place-order:disabled {
+      background: #aaaaaa;
+
+      cursor: not-allowed;
+
+      transform: none;
+
+      box-shadow: none;
+    }
+
+
+    /* =====================================================
+       MESSAGE
+    ===================================================== */
+
+    .message {
+      text-align: center;
+
+      padding: 45px 20px;
+
+      color: #777;
+
+      font-size: 17px;
+    }
+
+
+    /* =====================================================
+       SUCCESS
+    ===================================================== */
+
+    .success {
+      text-align: center;
+
+      padding: 55px 30px;
+    }
+
+
+    .success-icon {
+      font-size: 58px;
+
+      margin-bottom: 18px;
+    }
+
+
+    .success h2 {
+      color: #28a745;
+
+      margin-bottom: 15px;
+
+      font-size: 28px;
+    }
+
+
+    .success p {
+      color: #666;
+
+      margin-bottom: 13px;
+
+      font-size: 16px;
+    }
+
+
+    .order-id {
+      display: inline-block;
+
+      margin: 10px 0 20px;
+
+      padding: 10px 18px;
+
+      border-radius: 9px;
+
+      background: #fff4f0;
+
+      color: #ff4b2b;
+
+      font-weight: 800;
+
+      font-size: 18px;
+    }
+
+
+    .home-btn {
+      display: inline-block;
+
+      padding: 13px 25px;
+
+      background: #ff4b2b;
+
+      color: white;
+
+      text-decoration: none;
+
+      border-radius: 9px;
+
+      font-weight: 700;
+
+      transition: 0.2s;
+    }
+
+
+    .home-btn:hover {
+      background: #e83e20;
+
+      transform: translateY(-1px);
+    }
+
+
+    /* =====================================================
+       FOOTER
+    ===================================================== */
+
+    footer {
+      background: #222;
+
+      color: white;
+
+      text-align: center;
+
+      padding: 35px 20px;
+
+      margin-top: 10px;
+    }
+
+
+    .footer-logo {
+      color: #ff5a3c;
+
+      font-size: 21px;
+
+      font-weight: 700;
+
+      margin-bottom: 8px;
+    }
+
+
+    footer p {
+      color: #ddd;
+
+      font-size: 14px;
+    }
+
+
+    /* =====================================================
+       MOBILE
+    ===================================================== */
+
+    @media (max-width: 700px) {
+
+      header {
+        padding: 15px 20px;
+      }
+
+
+      .logo {
+        font-size: 27px;
+      }
+
+
+      .header-link {
+        display: none;
+      }
+
+
+      .back {
+        font-size: 14px;
+
+        padding: 9px 10px;
+      }
+
+
+      .container {
+        padding:
+          35px 15px 55px;
+      }
+
+
+      .page-heading h1 {
+        font-size: 31px;
+      }
+
+
+      .card {
+        padding: 21px;
+
+        border-radius: 14px;
+      }
+
+
+      .card h2 {
+        font-size: 21px;
+      }
+
+
+      .order-item {
+        align-items: flex-start;
+      }
+
+
+      .item-price {
+        font-size: 16px;
+      }
+
+    }
+
+
+    @media (max-width: 450px) {
+
+      .order-item {
+        flex-direction: column;
+
+        gap: 8px;
+      }
+
+
+      .item-price {
+        align-self: flex-start;
+      }
+
+
+      .success {
+        padding: 40px 20px;
+      }
+
+
+      .success h2 {
+        font-size: 24px;
+      }
+
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     HEADER
+===================================================== -->
+
+<header>
+
+  <div
+    class="logo"
+    onclick="window.location.href='/'"
+  >
+    Gyangmi Eats
+  </div>
+
+
+  <div class="header-right">
+
+    <a
+      href="/orders.html"
+      class="header-link"
+    >
+      📦 Orders
+    </a>
+
+
+    <a
+      href="/cart.html"
+      class="back"
+    >
+      ← Back to Cart
+    </a>
+
+  </div>
+
+</header>
+
+
+<!-- =====================================================
+     MAIN
+===================================================== -->
+
+<div class="container">
+
+
+  <div class="page-heading">
+
+    <h1>
+      Checkout
+    </h1>
+
+    <p>
+      Complete your order and get your food delivered.
+    </p>
+
+  </div>
+
+
+  <!-- ===================================================
+       ORDER SUMMARY
+  =================================================== -->
+
+  <div class="card">
+
+    <h2>
+      🛒 Your Order
+    </h2>
+
+
+    <div id="orderItems">
+
+      <div class="message">
+        Loading order...
+      </div>
+
+    </div>
+
+
+    <div class="summary-box">
+
+      <div class="summary-row">
+
+        <span>
+          Subtotal
+        </span>
+
+        <strong id="subtotal">
+          ¥0
+        </strong>
+
+      </div>
+
+
+      <div class="summary-row">
+
+        <span>
+          Delivery Fee
+        </span>
+
+        <strong>
+          ¥0
+        </strong>
+
+      </div>
+
+
+      <div class="summary-row total">
+
+        <span>
+          Total
+        </span>
+
+        <span id="total">
+          ¥0
+        </span>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- ===================================================
+       DELIVERY ADDRESS
+  =================================================== -->
+
+  <div class="card">
+
+    <h2>
+      📍 Delivery Address
+    </h2>
+
+
+    <div class="form-group">
+
+      <label for="address">
+        Address
+      </label>
+
+
+      <textarea
+        id="address"
+        placeholder="Enter your delivery address"
+      ></textarea>
+
+    </div>
+
+
+    <div class="form-group">
+
+      <label for="city">
+        City
+      </label>
+
+
+      <input
+        type="text"
+        id="city"
+        placeholder="Enter city"
+      >
+
+    </div>
+
+
+    <div class="form-group">
+
+      <label for="postalCode">
+        Postal Code
+      </label>
+
+
+      <input
+        type="text"
+        id="postalCode"
+        placeholder="Enter postal code"
+      >
+
+    </div>
+
+  </div>
+
+
+  <!-- ===================================================
+       PAYMENT
+  =================================================== -->
+
+  <div class="card">
+
+    <h2>
+      💳 Payment Method
+    </h2>
+
+
+    <div class="payment-note">
+      Choose how you would like to pay for your order.
+    </div>
+
+
+    <label for="paymentMethod">
+      Select Payment Method
+    </label>
+
+
+    <select id="paymentMethod">
+
+      <option value="">
+        Select payment method
+      </option>
+
+
+      <option value="Cash on Delivery">
+        Cash on Delivery
+      </option>
+
+
+      <option value="Card">
+        Card
+      </option>
+
+
+      <option value="Online Payment">
+        Online Payment
+      </option>
+
+    </select>
+
+  </div>
+
+
+  <!-- ===================================================
+       PLACE ORDER
+  =================================================== -->
+
+  <div class="card">
+
+    <button
+      id="placeOrderButton"
+      class="place-order"
+      onclick="placeOrder()"
+    >
+      Place Order
+    </button>
+
+  </div>
+
+
+  <div id="result"></div>
+
+
+</div>
+
+
+<!-- =====================================================
+     FOOTER
+===================================================== -->
+
+<footer>
+
+  <div class="footer-logo">
+    Gyangmi Eats
+  </div>
+
+
+  <p>
+    © 2026 Gyangmi Eats. All rights reserved.
+  </p>
+
+</footer>
+
+
+<script>
+  // =====================================================
+  // CART
+  // =====================================================
+  let cart = [];
+
+  try {
+    cart = JSON.parse(localStorage.getItem("foodgo_cart") || "[]") || [];
+  } catch (error) {
+    console.error("Cart loading failed:", error);
+    cart = [];
+  }
+
+  // =====================================================
+  // CURRENT USER
+  // =====================================================
+  function getCurrentUser() {
+    try {
+      return JSON.parse(
+        localStorage.getItem("gyangmiUser") ||
+        localStorage.getItem("user") ||
+        "null"
+      );
+    } catch (error) {
+      return null;
+    }
+  }
+
+  const currentUser = getCurrentUser();
+  const currentUserId = Number(currentUser?.id);
+
+  // =====================================================
+  // ELEMENTS
+  // =====================================================
+  const orderItems = document.getElementById("orderItems");
+  const subtotalElement = document.getElementById("subtotal");
+  const totalElement = document.getElementById("total");
+  const placeOrderButton = document.getElementById("placeOrderButton");
+
+  // =====================================================
+  // API HELPER
+  // =====================================================
+  async function apiRequest(url, options = {}) {
+    const response = await fetch(url, options);
+    const raw = await response.text();
+
+    let data = null;
+
+    try {
+      data = raw ? JSON.parse(raw) : null;
+    } catch (error) {
+      data = raw;
+    }
+
+    if (!response.ok) {
+      let message = "Request failed.";
+
+      if (data && typeof data === "object") {
+        message = data.message || data.error || JSON.stringify(data);
+      } else if (typeof data === "string" && data.trim()) {
+        message = data;
+      }
+
+      const err = new Error(message);
+      err.status = response.status;
+      err.data = data;
+      throw err;
+    }
+
+    return data;
+  }
+
+  // =====================================================
+  // LOAD ORDER
+  // =====================================================
+  function loadOrder() {
+    if (!Array.isArray(cart) || cart.length === 0) {
+      orderItems.innerHTML = `
+        <div class="message">
+          Your cart is empty.
+          <br><br>
+          <a href="/" class="home-btn">Browse Restaurants</a>
+        </div>
+      `;
+
+      placeOrderButton.disabled = true;
+      return;
+    }
+
+    let subtotal = 0;
+
+    orderItems.innerHTML = cart.map((item) => {
+      const price = Number(item.price) || 0;
+      const quantity = Number(item.quantity) || 0;
+      const itemTotal = price * quantity;
+      subtotal += itemTotal;
+
+      return `
+        <div class="order-item">
+          <div>
+            <div class="item-name">${escapeHtml(item.name || "Menu item")}</div>
+            <div class="item-details">
+              ¥${price.toLocaleString()} × ${quantity}
+            </div>
+          </div>
+          <div class="item-price">¥${itemTotal.toLocaleString()}</div>
+        </div>
+      `;
+    }).join("");
+
+    subtotalElement.textContent = "¥" + subtotal.toLocaleString();
+    totalElement.textContent = "¥" + subtotal.toLocaleString();
+  }
+
+  // =====================================================
+  // LOAD MENU DATA AND RESOLVE RESTAURANTS
+  // =====================================================
+  async function resolveCartItems() {
+    const menus = await apiRequest("/menus");
+
+    if (!Array.isArray(menus)) {
+      throw new Error("Menu information could not be loaded.");
+    }
+
+    const resolvedItems = cart.map((item) => {
+      const menu = menus.find((m) => Number(m.id) === Number(item.id));
+
+      if (!menu) {
+        throw new Error(
+          `Menu item #${item.id} could not be found. Please remove it from the cart and add it again.`
+        );
+      }
+
+      const restaurantId = Number(menu.restaurant_id ?? item.restaurant_id);
+
+      if (!Number.isInteger(restaurantId) || restaurantId <= 0) {
+        throw new Error(
+          `Restaurant information is missing for ${item.name || "this item"}.`
+        );
+      }
+
+      return {
+        ...item,
+        restaurant_id: restaurantId,
+        menu_id: Number(menu.id),
+        price: Number(item.price ?? menu.price ?? 0),
+        quantity: Number(item.quantity || 0)
+      };
+    });
+
+    return resolvedItems;
+  }
+
+  // =====================================================
+  // PLACE ORDER
+  // =====================================================
+  async function placeOrder() {
+    if (!Array.isArray(cart) || cart.length === 0) {
+      alert("Your cart is empty.");
+      return;
+    }
+
+    if (!Number.isInteger(currentUserId) || currentUserId <= 0) {
+      alert("Please login before placing an order.");
+      window.location.href = "/login.html";
+      return;
+    }
+
+    const address = document.getElementById("address").value.trim();
+    const city = document.getElementById("city").value.trim();
+    const postalCode = document.getElementById("postalCode").value.trim();
+    const paymentMethod = document.getElementById("paymentMethod").value;
+
+    if (!address) {
+      alert("Please enter your delivery address.");
+      return;
+    }
+
+    if (!city) {
+      alert("Please enter your city.");
+      return;
+    }
+
+    if (!paymentMethod) {
+      alert("Please select a payment method.");
+      return;
+    }
+
+    placeOrderButton.disabled = true;
+    placeOrderButton.textContent = "Preparing Order...";
+
+    try {
+      // Always resolve restaurant IDs from the current Menus table.
+      // This fixes old/stale restaurant_id values stored in localStorage.
+      const resolvedCart = await resolveCartItems();
+
+      // Group items by restaurant. A cart may contain items from more than
+      // one restaurant, so create one order per restaurant instead of failing.
+      const groups = new Map();
+
+      for (const item of resolvedCart) {
+        if (!groups.has(item.restaurant_id)) {
+          groups.set(item.restaurant_id, []);
+        }
+        groups.get(item.restaurant_id).push(item);
+      }
+
+      console.log("Checkout restaurant groups:", [...groups.entries()]);
+
+      const createdOrders = [];
+
+      // Save address once. If the same user/address already exists this still
+      // creates a normal address record, matching the existing backend API.
+      placeOrderButton.textContent = "Saving Address...";
+
+      await apiRequest("/addresses", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          user_id: currentUserId,
+          address,
+          city,
+          postal_code: postalCode,
+          phone: null
+        })
+      });
+
+      for (const [restaurantId, items] of groups.entries()) {
+        const total = items.reduce((sum, item) => {
+          return sum + Number(item.price || 0) * Number(item.quantity || 0);
+        }, 0);
+
+        if (!Number.isFinite(total) || total < 0) {
+          throw new Error("Invalid order total.");
+        }
+
+        placeOrderButton.textContent =
+          groups.size > 1
+            ? `Placing Order ${createdOrders.length + 1} of ${groups.size}...`
+            : "Placing Order...";
+
+        console.log("Creating order:", {
+          user_id: currentUserId,
+          restaurant_id: restaurantId,
+          total_amount: total,
+          status: "Pending"
+        });
+
+        const orderData = await apiRequest("/orders", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            user_id: currentUserId,
+            restaurant_id: Number(restaurantId),
+            total_amount: total,
+            status: "Pending"
+          })
+        });
+
+        const orderId = Number(orderData?.id || orderData?.order_id);
+
+        if (!Number.isInteger(orderId) || orderId <= 0) {
+          throw new Error("Order was created but the order ID was not returned.");
+        }
+
+        // Save every item belonging to this restaurant/order.
+        for (const item of items) {
+          await apiRequest("/order-items", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              order_id: orderId,
+              menu_id: Number(item.menu_id),
+              quantity: Number(item.quantity),
+              price: Number(item.price)
+            })
+          });
+        }
+
+        // Save payment for this order.
+        await apiRequest("/payments", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            order_id: orderId,
+            amount: total,
+            method: paymentMethod,
+            status: "Pending",
+            paid_at: null
+          })
+        });
+
+        createdOrders.push({
+          id: orderId,
+          restaurantId,
+          total
+        });
+      }
+
+      // Only clear the cart after every order/item/payment succeeds.
+      localStorage.removeItem("foodgo_cart");
+
+      const totalAmount = createdOrders.reduce(
+        (sum, order) => sum + Number(order.total || 0),
+        0
+      );
+
+      const orderListHTML = createdOrders.map((order) => `
+        <div class="order-id" style="display:block; margin:10px auto; max-width:320px;">
+          Order #${escapeHtml(order.id)} — ¥${Number(order.total).toLocaleString()}
+        </div>
+      `).join("");
+
+      document.querySelector(".container").innerHTML = `
+        <div class="card success">
+          <div class="success-icon">✅</div>
+          <h2>Order Placed Successfully!</h2>
+          <p>Thank you for ordering from Gyangmi Eats.</p>
+          <p>Your order${createdOrders.length > 1 ? "s are" : " is"} currently <strong>Pending</strong>.</p>
+          ${orderListHTML}
+          <p style="margin-top:15px; font-weight:700;">
+            Total: ¥${totalAmount.toLocaleString()}
+          </p>
+          <br>
+          <a href="/orders.html" class="home-btn">View My Orders</a>
+          <a href="/" class="home-btn" style="margin-left:8px;">Back to Restaurants</a>
+        </div>
+      `;
+    } catch (error) {
+      console.error("Checkout error:", error);
+
+      let message = error?.message || "Order creation failed.";
+
+      // Make common backend/foreign-key errors easier to understand.
+      if (message === "Order creation failed") {
+        message +=
+          " The restaurant ID in the cart may not exist in the local Restaurants table. Please go back to the menu and add the item again.";
+      }
+
+      alert("Order failed: " + message);
+
+      placeOrderButton.disabled = false;
+      placeOrderButton.textContent = "Place Order";
+    }
+  }
+
+  // =====================================================
+  // HTML SAFETY
+  // =====================================================
+  function escapeHtml(value) {
+    return String(value)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
+
+  // =====================================================
+  // START
+  // =====================================================
+  loadOrder();
+
+</script>
+
+
+</body>
+
+</html>

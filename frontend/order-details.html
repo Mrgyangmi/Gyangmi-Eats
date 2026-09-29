@@ -1,0 +1,1569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Order Details - Gyangmi Eats</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f7f7f7;
+      color: #222;
+    }
+
+    header {
+      height: 105px;
+      background: #ff5a1f;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 8%;
+    }
+
+    .logo {
+      font-size: 34px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    nav {
+      display: flex;
+      gap: 45px;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 1000px;
+      margin: 55px auto;
+    }
+
+    .title {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .title h1 {
+      font-size: 48px;
+      margin-bottom: 10px;
+    }
+
+    .title p {
+      color: #777;
+      font-size: 20px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 22px;
+      padding: 35px;
+      margin-bottom: 25px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.07);
+    }
+
+    .order-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 25px;
+      margin-bottom: 25px;
+    }
+
+    .order-header h2 {
+      font-size: 30px;
+    }
+
+    .status {
+      background: #fff0c7;
+      color: #8a6500;
+      padding: 12px 22px;
+      border-radius: 30px;
+      font-weight: 700;
+      font-size: 17px;
+    }
+
+    .status.delivered {
+      background: #dff7e8;
+      color: #16803c;
+    }
+
+    .status.cancelled {
+      background: #ffe5e5;
+      color: #c00000;
+    }
+
+    .status.out {
+      background: #e4f0ff;
+      color: #1557a6;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+
+    .info-box {
+      background: #fafafa;
+      padding: 22px;
+      border-radius: 15px;
+    }
+
+    .info-box h4 {
+      color: #888;
+      font-size: 14px;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+
+    .info-box p {
+      font-size: 18px;
+      font-weight: 700;
+      line-height: 1.4;
+      word-break: break-word;
+    }
+
+    .section-title {
+      font-size: 25px;
+      margin-bottom: 20px;
+    }
+
+    /* =========================
+       ORDER TRACKING
+    ========================= */
+
+    .tracking-card {
+      background: white;
+      border-radius: 22px;
+      padding: 35px;
+      margin-bottom: 25px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.07);
+    }
+
+    .tracking-subtitle {
+      color: #777;
+      margin-top: -10px;
+      margin-bottom: 30px;
+      font-size: 16px;
+    }
+
+    .tracking {
+      position: relative;
+      margin-top: 20px;
+    }
+
+    .tracking-step {
+      display: flex;
+      position: relative;
+      min-height: 85px;
+    }
+
+    .tracking-line {
+      position: absolute;
+      left: 19px;
+      top: 42px;
+      width: 3px;
+      height: 55px;
+      background: #ddd;
+    }
+
+    .tracking-step:last-child .tracking-line {
+      display: none;
+    }
+
+    .tracking-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: #eee;
+      color: #888;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      font-weight: 700;
+      z-index: 2;
+      flex-shrink: 0;
+    }
+
+    .tracking-step.completed .tracking-icon {
+      background: #ff5a1f;
+      color: white;
+    }
+
+    .tracking-step.current .tracking-icon {
+      background: #ff5a1f;
+      color: white;
+      box-shadow: 0 0 0 6px rgba(255,90,31,0.15);
+    }
+
+    .tracking-step.cancelled .tracking-icon {
+      background: #c00000;
+      color: white;
+    }
+
+    .tracking-content {
+      margin-left: 18px;
+      padding-top: 2px;
+    }
+
+    .tracking-content h3 {
+      font-size: 18px;
+      margin-bottom: 5px;
+    }
+
+    .tracking-content p {
+      color: #888;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+    .tracking-step.completed .tracking-content h3,
+    .tracking-step.current .tracking-content h3 {
+      color: #222;
+    }
+
+    /* =========================
+       DELIVERY DRIVER
+    ========================= */
+
+    .driver-box {
+      background: #fff7f2;
+      border: 1px solid #ffe0d0;
+      border-radius: 16px;
+      padding: 22px;
+    }
+
+    .driver-title {
+      font-size: 20px;
+      font-weight: 800;
+      margin-bottom: 15px;
+    }
+
+    .driver-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+    }
+
+    .driver-info {
+      background: white;
+      border-radius: 12px;
+      padding: 15px;
+    }
+
+    .driver-info small {
+      color: #888;
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .driver-info strong {
+      font-size: 16px;
+    }
+
+    .delivery-status {
+      display: inline-block;
+      margin-top: 18px;
+      background: #e4f0ff;
+      color: #1557a6;
+      padding: 9px 15px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .time-info {
+      margin-top: 15px;
+      color: #666;
+      font-size: 14px;
+      line-height: 1.8;
+    }
+
+    .item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    .item:last-child {
+      border-bottom: none;
+    }
+
+    .item-name {
+      font-size: 19px;
+      font-weight: 700;
+    }
+
+    .item-desc {
+      color: #888;
+      margin-top: 5px;
+    }
+
+    .item-right {
+      text-align: right;
+    }
+
+    .quantity {
+      color: #777;
+      margin-bottom: 5px;
+    }
+
+    .price {
+      font-size: 19px;
+      font-weight: 700;
+    }
+
+    .total-section {
+      border-top: 1px solid #eee;
+      margin-top: 15px;
+      padding-top: 25px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .total-label {
+      font-size: 20px;
+      color: #777;
+    }
+
+    .total {
+      color: #ff5a1f;
+      font-size: 32px;
+      font-weight: 800;
+    }
+
+    .back-btn {
+      display: block;
+      width: fit-content;
+      margin: 35px auto;
+      background: #ff5a1f;
+      color: white;
+      text-decoration: none;
+      padding: 15px 30px;
+      border-radius: 12px;
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .loading {
+      text-align: center;
+      font-size: 22px;
+      padding: 50px;
+      color: #777;
+    }
+
+    .error {
+      background: #ffe5e5;
+      color: #c00000;
+      padding: 20px;
+      border-radius: 12px;
+      text-align: center;
+      font-size: 18px;
+    }
+
+    .refresh-note {
+      text-align: center;
+      color: #999;
+      font-size: 13px;
+      margin-top: 10px;
+    }
+
+    @media (max-width: 700px) {
+
+      header {
+        padding: 0 5%;
+      }
+
+      .logo {
+        font-size: 26px;
+      }
+
+      nav {
+        gap: 18px;
+      }
+
+      nav a {
+        font-size: 17px;
+      }
+
+      .title h1 {
+        font-size: 36px;
+      }
+
+      .info-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .driver-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .card,
+      .tracking-card {
+        padding: 22px;
+      }
+
+      .order-header {
+        align-items: flex-start;
+        gap: 15px;
+        flex-direction: column;
+      }
+
+      .item {
+        gap: 15px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+
+  <div class="logo" onclick="goHome()">
+    🍔 Gyangmi Eats
+  </div>
+
+  <nav>
+    <a href="/">Home</a>
+    <a href="/cart.html">Cart</a>
+  </nav>
+
+</header>
+
+
+<div class="container">
+
+  <div class="title">
+
+    <h1>Order Details</h1>
+
+    <p>
+      View your complete Gyangmi Eats order information
+    </p>
+
+  </div>
+
+
+  <div id="content">
+
+    <div class="loading">
+      Loading order details...
+    </div>
+
+  </div>
+
+</div>
+
+
+<script>
+
+const params =
+  new URLSearchParams(window.location.search);
+
+const orderId =
+  params.get("order_id") ||
+  params.get("id");
+
+function getCurrentUserId() {
+  try {
+    const user = JSON.parse(
+      localStorage.getItem("gyangmiUser") ||
+      localStorage.getItem("user") ||
+      "null"
+    );
+    return Number(user?.id) || 1;
+  } catch (error) {
+    return 1;
+  }
+}
+
+const currentUserId = getCurrentUserId();
+
+const content =
+  document.getElementById("content");
+
+
+/* =========================
+   HOME
+========================= */
+
+function goHome() {
+
+  window.location.href = "/";
+
+}
+
+
+/* =========================
+   ESCAPE HTML
+========================= */
+
+function escapeHtml(value) {
+
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+
+}
+
+
+/* =========================
+   PRICE
+========================= */
+
+function formatPrice(price) {
+
+  return "¥" +
+    Number(price || 0)
+      .toLocaleString("ja-JP");
+
+}
+
+
+/* =========================
+   DATE
+========================= */
+
+function formatDate(date) {
+
+  if (!date) {
+    return "Not available";
+  }
+
+  const d =
+    new Date(date);
+
+  if (isNaN(d.getTime())) {
+    return escapeHtml(date);
+  }
+
+  return d.toLocaleString("ja-JP", {
+
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit"
+
+  });
+
+}
+
+
+/* =========================
+   API
+========================= */
+
+async function getData(url) {
+
+  const response =
+    await fetch(url);
+
+  if (!response.ok) {
+
+    throw new Error(
+      "Failed to load " + url
+    );
+
+  }
+
+  return await response.json();
+
+}
+
+
+/* =========================
+   STATUS CLASS
+========================= */
+
+function getStatusClass(status) {
+
+  if (status === "Delivered") {
+    return "delivered";
+  }
+
+  if (status === "Cancelled") {
+    return "cancelled";
+  }
+
+  if (status === "Out for Delivery") {
+    return "out";
+  }
+
+  return "";
+
+}
+
+
+/* =========================
+   TRACKING
+========================= */
+
+function createTrackingHTML(orderStatus) {
+
+  const status =
+    orderStatus || "Pending";
+
+
+  if (status === "Cancelled") {
+
+    return `
+
+      <div class="tracking">
+
+        <div class="tracking-step cancelled">
+
+          <div class="tracking-icon">
+            ✓
+          </div>
+
+          <div class="tracking-content">
+
+            <h3>
+              Order Placed
+            </h3>
+
+            <p>
+              Your order was received.
+            </p>
+
+          </div>
+
+          <div class="tracking-line"></div>
+
+        </div>
+
+
+        <div class="tracking-step cancelled">
+
+          <div class="tracking-icon">
+            ✕
+          </div>
+
+          <div class="tracking-content">
+
+            <h3>
+              Order Cancelled
+            </h3>
+
+            <p>
+              This order has been cancelled.
+            </p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    `;
+
+  }
+
+
+  const steps = [
+
+    {
+      name: "Order Placed",
+      icon: "✓",
+      statuses: [
+        "Pending",
+        "Confirmed",
+        "Preparing",
+        "Out for Delivery",
+        "Delivered"
+      ],
+      description:
+        "Your order has been received."
+    },
+
+    {
+      name: "Confirmed",
+      icon: "✓",
+      statuses: [
+        "Confirmed",
+        "Preparing",
+        "Out for Delivery",
+        "Delivered"
+      ],
+      description:
+        "Restaurant has confirmed your order."
+    },
+
+    {
+      name: "Preparing",
+      icon: "👨‍🍳",
+      statuses: [
+        "Preparing",
+        "Out for Delivery",
+        "Delivered"
+      ],
+      description:
+        "Restaurant is preparing your food."
+    },
+
+    {
+      name: "Out for Delivery",
+      icon: "🚗",
+      statuses: [
+        "Out for Delivery",
+        "Delivered"
+      ],
+      description:
+        "Your order is on the way."
+    },
+
+    {
+      name: "Delivered",
+      icon: "🏠",
+      statuses: [
+        "Delivered"
+      ],
+      description:
+        "Your order has been delivered."
+    }
+
+  ];
+
+
+  const currentIndex =
+    steps.findIndex(step =>
+      step.statuses.includes(status)
+    );
+
+
+  return `
+
+    <div class="tracking">
+
+      ${steps.map((step, index) => {
+
+        const completed =
+          index < currentIndex;
+
+        const current =
+          index === currentIndex;
+
+        return `
+
+          <div class="
+            tracking-step
+            ${completed ? "completed" : ""}
+            ${current ? "current" : ""}
+          ">
+
+            <div class="tracking-icon">
+              ${step.icon}
+            </div>
+
+            <div class="tracking-content">
+
+              <h3>
+                ${step.name}
+              </h3>
+
+              <p>
+                ${step.description}
+              </p>
+
+            </div>
+
+            ${
+              index < steps.length - 1
+                ? `<div class="tracking-line"></div>`
+                : ""
+            }
+
+          </div>
+
+        `;
+
+      }).join("")}
+
+    </div>
+
+  `;
+
+}
+
+
+/* =========================
+   DELIVERY INFO
+========================= */
+
+function createDeliveryHTML(
+  delivery,
+  driver
+) {
+
+  if (!delivery) {
+
+    return `
+
+      <div class="driver-box">
+
+        <div class="driver-title">
+          🚚 Delivery Information
+        </div>
+
+        <p style="color:#777;">
+          Delivery has not been assigned yet.
+        </p>
+
+      </div>
+
+    `;
+
+  }
+
+
+  const driverName =
+    driver?.name ||
+    driver?.full_name ||
+    "Driver not assigned";
+
+
+  const driverPhone =
+    driver?.phone ||
+    driver?.mobile ||
+    "Not available";
+
+
+  const vehicle =
+    driver?.vehicle ||
+    driver?.vehicle_type ||
+    "Not available";
+
+
+  const vehicleNumber =
+    driver?.vehicle_number ||
+    driver?.vehicle_no ||
+    "Not available";
+
+
+  const deliveryStatus =
+    delivery.status ||
+    "Assigned";
+
+
+  return `
+
+    <div class="driver-box">
+
+      <div class="driver-title">
+        🚚 Delivery Information
+      </div>
+
+
+      <div class="driver-grid">
+
+        <div class="driver-info">
+
+          <small>
+            Driver
+          </small>
+
+          <strong>
+            👤 ${escapeHtml(driverName)}
+          </strong>
+
+        </div>
+
+
+        <div class="driver-info">
+
+          <small>
+            Phone
+          </small>
+
+          <strong>
+            📞 ${escapeHtml(driverPhone)}
+          </strong>
+
+        </div>
+
+
+        <div class="driver-info">
+
+          <small>
+            Vehicle
+          </small>
+
+          <strong>
+            🚗 ${escapeHtml(vehicle)}
+          </strong>
+
+        </div>
+
+
+        <div class="driver-info">
+
+          <small>
+            Vehicle Number
+          </small>
+
+          <strong>
+            ${escapeHtml(vehicleNumber)}
+          </strong>
+
+        </div>
+
+      </div>
+
+
+      <div class="delivery-status">
+
+        Delivery Status:
+        ${escapeHtml(deliveryStatus)}
+
+      </div>
+
+
+      <div class="time-info">
+
+        ${
+          delivery.pickup_time
+            ? `📦 Picked up: ${formatDate(delivery.pickup_time)}<br>`
+            : ""
+        }
+
+        ${
+          delivery.delivery_time
+            ? `🏠 Delivered: ${formatDate(delivery.delivery_time)}`
+            : ""
+        }
+
+      </div>
+
+    </div>
+
+  `;
+
+}
+
+
+/* =========================
+   LOAD ORDER
+========================= */
+
+async function loadOrderDetails(
+  showLoading = false
+) {
+
+  if (!orderId) {
+
+    content.innerHTML = `
+
+      <div class="error">
+        Order ID is missing.
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  try {
+
+    if (showLoading) {
+
+      content.innerHTML = `
+
+        <div class="loading">
+          Loading order details...
+        </div>
+
+      `;
+
+    }
+
+
+    const [
+
+      orders,
+      orderItems,
+      restaurants,
+      menus,
+      foods,
+      addresses,
+      payments,
+      deliveries,
+      drivers
+
+    ] = await Promise.all([
+
+      getData("/orders"),
+
+      getData("/order-items"),
+
+      getData("/restaurants"),
+
+      getData("/menus"),
+
+      getData("/foods"),
+
+      getData("/addresses"),
+
+      getData("/payments"),
+
+      getData("/deliveries"),
+
+      getData("/delivery-drivers")
+
+    ]);
+
+
+    /* =========================
+       FIND ORDER
+    ========================= */
+
+    const order =
+      orders.find(
+        item =>
+          Number(item.id) ===
+          Number(orderId)
+      );
+
+
+    if (!order) {
+      throw new Error("Order not found");
+    }
+
+    if (Number(order.user_id) !== currentUserId) {
+      throw new Error("You are not allowed to view this order.");
+    }
+
+
+    /* =========================
+       RESTAURANT
+    ========================= */
+
+    const restaurant =
+      restaurants.find(
+        item =>
+          Number(item.id) ===
+          Number(order.restaurant_id)
+      );
+
+
+    /* =========================
+       ORDER ITEMS
+    ========================= */
+
+    const items =
+      orderItems.filter(
+        item =>
+          Number(item.order_id) ===
+          Number(order.id)
+      );
+
+
+    /* =========================
+       ADDRESS
+    ========================= */
+
+    const userAddresses =
+      addresses.filter(
+        item =>
+          Number(item.user_id) ===
+          Number(order.user_id)
+      );
+
+
+    let address = null;
+
+
+    if (userAddresses.length > 0) {
+
+      address =
+        userAddresses[
+          userAddresses.length - 1
+        ];
+
+    }
+
+
+    /* =========================
+       PAYMENT
+    ========================= */
+
+    const payment =
+      payments.find(
+        item =>
+          Number(item.order_id) ===
+          Number(order.id)
+      );
+
+
+    /* =========================
+       DELIVERY
+    ========================= */
+
+    const delivery =
+      deliveries.find(
+        item =>
+          Number(item.order_id) ===
+          Number(order.id)
+      );
+
+
+    /* =========================
+       DRIVER
+    ========================= */
+
+    let driver = null;
+
+
+    if (delivery?.driver_id) {
+
+      driver =
+        drivers.find(
+          item =>
+            Number(item.id) ===
+            Number(delivery.driver_id)
+        );
+
+    }
+
+
+    /* =========================
+       ITEMS HTML
+    ========================= */
+
+    let itemsHTML = "";
+
+
+    if (items.length === 0) {
+
+      itemsHTML = `
+
+        <p style="color:#777;">
+          No order items found.
+        </p>
+
+      `;
+
+    } else {
+
+      itemsHTML =
+        items.map(item => {
+
+          const menu =
+            menus.find(
+              m =>
+                Number(m.id) ===
+                Number(item.menu_id)
+            );
+
+          // Foods is kept as a legacy fallback; OrderItems.menu_id
+          // correctly points to the Menus table.
+          const food =
+            foods.find(
+              f =>
+                Number(f.id) ===
+                Number(item.menu_id)
+            );
+
+          const foodName =
+            menu?.name ||
+            food?.name ||
+            "Food Item";
+
+          const foodDescription =
+            menu?.description ||
+            food?.description ||
+            "";
+
+
+          const quantity =
+            Number(item.quantity || 1);
+
+
+          const price =
+            Number(item.price || 0);
+
+
+          const itemTotal =
+            price * quantity;
+
+
+          return `
+
+            <div class="item">
+
+              <div>
+
+                <div class="item-name">
+                  ${escapeHtml(foodName)}
+                </div>
+
+                <div class="item-desc">
+
+                  ${
+                    foodDescription
+                      ? escapeHtml(foodDescription)
+                      : formatPrice(price) +
+                        " × " +
+                        quantity
+                  }
+
+                </div>
+
+              </div>
+
+
+              <div class="item-right">
+
+                <div class="quantity">
+                  Qty: ${quantity}
+                </div>
+
+                <div class="price">
+                  ${formatPrice(itemTotal)}
+                </div>
+
+              </div>
+
+            </div>
+
+          `;
+
+        }).join("");
+
+    }
+
+
+    /* =========================
+       RESTAURANT
+    ========================= */
+
+    const restaurantName =
+      restaurant?.name ||
+      "Gyangmi Eats Restaurant";
+
+
+    /* =========================
+       ADDRESS
+    ========================= */
+
+    let addressText =
+      "Address not available";
+
+
+    if (address) {
+
+      const parts = [
+
+        address.address_line,
+
+        address.address,
+
+        address.street,
+
+        address.city,
+
+        address.postal_code,
+
+        address.zip_code
+
+      ].filter(Boolean);
+
+
+      if (parts.length > 0) {
+
+        addressText =
+          parts.join(", ");
+
+      }
+
+    }
+
+
+    /* =========================
+       PAYMENT
+    ========================= */
+
+    const paymentMethod =
+      payment?.method ||
+      "Not specified";
+
+
+    /* =========================
+       STATUS
+    ========================= */
+
+    const status =
+      order.status ||
+      "Pending";
+
+
+    const statusClass =
+      getStatusClass(status);
+
+
+    /* =========================
+       TOTAL
+    ========================= */
+
+    const total =
+      Number(
+        order.total_amount ??
+        order.total ??
+        0
+      );
+
+
+    /* =========================
+       RENDER
+    ========================= */
+
+    content.innerHTML = `
+
+
+      <!-- ORDER SUMMARY -->
+
+      <div class="card">
+
+        <div class="order-header">
+
+          <div>
+
+            <h2>
+              Order #${escapeHtml(order.id)}
+            </h2>
+
+            <p style="
+              color:#777;
+              margin-top:8px;
+              font-size:17px;
+            ">
+
+              ${formatDate(
+                order.created_at ||
+                order.order_date ||
+                order.createdAt
+              )}
+
+            </p>
+
+          </div>
+
+
+          <div class="
+            status
+            ${statusClass}
+          ">
+
+            ${escapeHtml(status)}
+
+          </div>
+
+        </div>
+
+
+        <div class="info-grid">
+
+
+          <div class="info-box">
+
+            <h4>
+              Restaurant
+            </h4>
+
+            <p>
+              ${escapeHtml(restaurantName)}
+            </p>
+
+          </div>
+
+
+          <div class="info-box">
+
+            <h4>
+              Payment
+            </h4>
+
+            <p>
+              ${escapeHtml(paymentMethod)}
+            </p>
+
+          </div>
+
+
+          <div class="info-box">
+
+            <h4>
+              Delivery Address
+            </h4>
+
+            <p>
+              ${escapeHtml(addressText)}
+            </p>
+
+          </div>
+
+
+          <div class="info-box">
+
+            <h4>
+              Order ID
+            </h4>
+
+            <p>
+              #${escapeHtml(order.id)}
+            </p>
+
+          </div>
+
+
+        </div>
+
+      </div>
+
+
+      <!-- ORDER TRACKING -->
+
+      <div class="tracking-card">
+
+        <h2 class="section-title">
+          📦 Track Your Order
+        </h2>
+
+        <p class="tracking-subtitle">
+          Follow your order from restaurant to your door
+        </p>
+
+
+        ${createTrackingHTML(status)}
+
+
+        <div class="refresh-note">
+          🔄 Order status updates automatically
+        </div>
+
+      </div>
+
+
+      <!-- DELIVERY -->
+
+      <div class="card">
+
+        ${createDeliveryHTML(
+          delivery,
+          driver
+        )}
+
+      </div>
+
+
+      <!-- ITEMS -->
+
+      <div class="card">
+
+        <h2 class="section-title">
+          Order Items
+        </h2>
+
+
+        ${itemsHTML}
+
+
+        <div class="total-section">
+
+          <div class="total-label">
+            Total Amount
+          </div>
+
+          <div class="total">
+            ${formatPrice(total)}
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <a
+        href="/orders.html"
+        class="back-btn"
+      >
+        ← Back to My Orders
+      </a>
+
+    `;
+
+
+  } catch (error) {
+
+    console.error(
+      "Order details error:",
+      error
+    );
+
+
+    content.innerHTML = `
+
+      <div class="error">
+
+        Failed to load order details.
+
+        <br><br>
+
+        ${escapeHtml(error.message)}
+
+      </div>
+
+    `;
+
+  }
+
+}
+
+
+/* =========================
+   FIRST LOAD
+========================= */
+
+loadOrderDetails(true);
+
+
+/* =========================
+   AUTO REFRESH
+   Every 5 seconds
+========================= */
+
+setInterval(() => {
+
+  loadOrderDetails(false);
+
+}, 5000);
+
+</script>
+
+</body>
+</html>

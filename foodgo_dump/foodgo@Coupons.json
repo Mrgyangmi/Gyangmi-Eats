@@ -1,0 +1,33 @@
+{
+    "options": {
+        "schema": "foodgo",
+        "table": "Coupons",
+        "columns": [
+            "id",
+            "code",
+            "discount_type",
+            "discount_value",
+            "min_order_amount",
+            "expiry_date",
+            "created_at"
+        ],
+        "defaultCharacterSet": "utf8mb4",
+        "fieldsTerminatedBy": "\t",
+        "fieldsEnclosedBy": "",
+        "fieldsOptionallyEnclosed": false,
+        "fieldsEscapedBy": "\\",
+        "linesTerminatedBy": "\n"
+    },
+    "triggers": [],
+    "includesData": true,
+    "includesDdl": true,
+    "extension": "tsv.zst",
+    "chunking": true,
+    "compression": "zstd",
+    "primaryIndex": [
+        "id"
+    ],
+    "hasPKE": true,
+    "partitions": [],
+    "basenames": {}
+}

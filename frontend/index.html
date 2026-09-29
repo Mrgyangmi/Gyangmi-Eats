@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Gyangmi Eats - Restaurants</title>
+
+  <style>
+
+    /* =====================================================
+       RESET
+    ===================================================== */
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+
+    body {
+      background: #f7f7f7;
+      color: #222;
+      min-height: 100vh;
+    }
+
+
+    /* =====================================================
+       HEADER
+    ===================================================== */
+
+    header {
+      background: rgba(255, 255, 255, 0.97);
+      padding: 18px 50px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 15px rgba(0, 0, 0, 0.07);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+
+    .logo {
+      font-size: 32px;
+      font-weight: 800;
+      color: #ff4b2b;
+      letter-spacing: -1px;
+      cursor: pointer;
+    }
+
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+
+
+    .nav-link {
+      text-decoration: none;
+      color: #444;
+      font-weight: 600;
+      font-size: 15px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      transition: 0.2s;
+    }
+
+
+    .nav-link:hover {
+      color: #ff4b2b;
+      background: #fff3ef;
+    }
+
+
+    .cart-link {
+      text-decoration: none;
+      color: #333;
+      font-weight: 700;
+      font-size: 16px;
+      padding: 11px 16px;
+      border-radius: 10px;
+      transition: 0.2s;
+    }
+
+
+    .cart-link:hover {
+      color: #ff4b2b;
+      background: #fff3ef;
+    }
+
+
+    /* =====================================================
+       HERO
+    ===================================================== */
+
+    .hero {
+      background:
+        radial-gradient(
+          circle at top right,
+          rgba(255, 75, 43, 0.08),
+          transparent 35%
+        ),
+        linear-gradient(
+          180deg,
+          #ffffff 0%,
+          #fffafa 100%
+        );
+
+      text-align: center;
+      padding: 85px 20px 80px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+
+    .hero-badge {
+      display: inline-block;
+      background: #fff0ec;
+      color: #ff4b2b;
+      padding: 8px 16px;
+      border-radius: 30px;
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 22px;
+    }
+
+
+    .hero h1 {
+      font-size: 52px;
+      line-height: 1.15;
+      margin-bottom: 18px;
+      letter-spacing: -1.5px;
+    }
+
+
+    .hero h1 span {
+      color: #ff4b2b;
+    }
+
+
+    .hero p {
+      color: #707070;
+      font-size: 19px;
+      max-width: 720px;
+      margin: auto;
+      line-height: 1.7;
+    }
+
+
+    /* =====================================================
+       RESTAURANT SECTION
+    ===================================================== */
+
+    .section {
+      max-width: 1250px;
+      margin: auto;
+      padding: 65px 30px 70px;
+    }
+
+
+    .section-title {
+      text-align: center;
+      margin-bottom: 42px;
+    }
+
+
+    .section-title h2 {
+      font-size: 36px;
+      margin-bottom: 10px;
+      letter-spacing: -0.5px;
+    }
+
+
+    .section-title p {
+      color: #777;
+      font-size: 17px;
+    }
+
+
+    /* =====================================================
+       RESTAURANT LIST
+    ===================================================== */
+
+    .restaurant-list {
+      display: grid;
+      grid-template-columns: repeat(
+        auto-fit,
+        minmax(290px, 1fr)
+      );
+      gap: 30px;
+    }
+
+
+    /* =====================================================
+       RESTAURANT CARD
+    ===================================================== */
+
+    .restaurant-card {
+      background: white;
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow:
+        0 5px 18px rgba(0, 0, 0, 0.07);
+
+      border: 1px solid #eeeeee;
+
+      transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
+
+      display: flex;
+      flex-direction: column;
+    }
+
+
+    .restaurant-card:hover {
+      transform: translateY(-7px);
+
+      box-shadow:
+        0 15px 35px rgba(0, 0, 0, 0.12);
+    }
+
+
+    /* =====================================================
+       RESTAURANT IMAGE
+    ===================================================== */
+
+    .restaurant-image {
+      height: 210px;
+
+      background:
+        linear-gradient(
+          135deg,
+          #fff3ef,
+          #f4f4f4
+        );
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      font-size: 85px;
+
+      position: relative;
+
+      transition: 0.25s;
+    }
+
+
+    .restaurant-card:hover .restaurant-image {
+      background:
+        linear-gradient(
+          135deg,
+          #ffe9e3,
+          #f2f2f2
+        );
+    }
+
+
+    .restaurant-image::after {
+      content: "";
+      position: absolute;
+      width: 110px;
+      height: 18px;
+      background: rgba(0, 0, 0, 0.07);
+      border-radius: 50%;
+      bottom: 34px;
+      filter: blur(6px);
+    }
+
+
+    /* =====================================================
+       RESTAURANT CONTENT
+    ===================================================== */
+
+    .restaurant-content {
+      padding: 25px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+
+    .restaurant-content h3 {
+      font-size: 23px;
+      line-height: 1.3;
+      margin-bottom: 10px;
+    }
+
+
+    .restaurant-content p {
+      color: #777;
+      line-height: 1.6;
+      min-height: 50px;
+      margin-bottom: 22px;
+      font-size: 15px;
+    }
+
+
+    /* =====================================================
+       VIEW MENU BUTTON
+    ===================================================== */
+
+    .view-menu {
+      display: block;
+      width: 100%;
+
+      padding: 14px 16px;
+
+      background: #ff4b2b;
+      color: white;
+
+      text-align: center;
+      text-decoration: none;
+
+      border: none;
+      border-radius: 10px;
+
+      font-size: 16px;
+      font-weight: 700;
+
+      cursor: pointer;
+
+      transition:
+        background 0.2s,
+        transform 0.2s,
+        box-shadow 0.2s;
+
+      margin-top: auto;
+    }
+
+
+    .view-menu:hover {
+      background: #e83e20;
+
+      transform: translateY(-1px);
+
+      box-shadow:
+        0 7px 16px rgba(255, 75, 43, 0.25);
+    }
+
+
+    .view-menu:active {
+      transform: translateY(1px);
+    }
+
+
+    /* =====================================================
+       LOADING / MESSAGE
+    ===================================================== */
+
+    .message {
+      text-align: center;
+      padding: 70px 20px;
+      color: #777;
+      font-size: 18px;
+      grid-column: 1 / -1;
+    }
+
+
+    .loading-icon {
+      font-size: 35px;
+      margin-bottom: 12px;
+    }
+
+
+    .error {
+      color: #d93025;
+    }
+
+
+    /* =====================================================
+       FOOTER
+    ===================================================== */
+
+    footer {
+      background: #222;
+      color: white;
+      text-align: center;
+      padding: 35px 20px;
+      margin-top: 10px;
+    }
+
+
+    footer p {
+      color: #ddd;
+      font-size: 14px;
+    }
+
+
+    .footer-logo {
+      color: #ff5a3c;
+      font-size: 21px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+
+    /* =====================================================
+       MOBILE
+    ===================================================== */
+
+    @media (max-width: 700px) {
+
+      header {
+        padding: 15px 20px;
+      }
+
+
+      .logo {
+        font-size: 27px;
+      }
+
+
+      .header-right {
+        gap: 5px;
+      }
+
+
+      .nav-link {
+        display: none;
+      }
+
+
+      .cart-link {
+        font-size: 15px;
+        padding: 9px 10px;
+      }
+
+
+      .hero {
+        padding: 60px 20px 55px;
+      }
+
+
+      .hero-badge {
+        font-size: 12px;
+        padding: 7px 13px;
+      }
+
+
+      .hero h1 {
+        font-size: 36px;
+        letter-spacing: -1px;
+      }
+
+
+      .hero p {
+        font-size: 16px;
+        line-height: 1.6;
+      }
+
+
+      .section {
+        padding: 45px 20px 55px;
+      }
+
+
+      .section-title {
+        margin-bottom: 30px;
+      }
+
+
+      .section-title h2 {
+        font-size: 29px;
+      }
+
+
+      .section-title p {
+        font-size: 15px;
+      }
+
+
+      .restaurant-list {
+        grid-template-columns: 1fr;
+        gap: 22px;
+      }
+
+
+      .restaurant-image {
+        height: 180px;
+        font-size: 75px;
+      }
+
+
+      .restaurant-content {
+        padding: 21px;
+      }
+
+
+      .restaurant-content h3 {
+        font-size: 21px;
+      }
+
+    }
+
+
+    /* =====================================================
+       SMALL MOBILE
+    ===================================================== */
+
+    @media (max-width: 400px) {
+
+      .hero h1 {
+        font-size: 31px;
+      }
+
+
+      .restaurant-image {
+        height: 165px;
+      }
+
+    }
+
+  
+    .restaurant-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-top: 15px;
+    }
+
+    .favorite-button {
+      border: 1px solid #ff5a1f;
+      background: white;
+      color: #ff5a1f;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .favorite-button:hover {
+      background: #fff3ed;
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+
+
+  <!-- =====================================================
+       HEADER
+  ===================================================== -->
+
+  <header>
+
+    <div
+      class="logo"
+      onclick="window.location.href='/'"
+    >
+      Gyangmi Eats
+    </div>
+
+
+    <div class="header-right">
+
+      <a
+        class="nav-link"
+        href="/orders.html"
+      >
+        📦 Orders
+      </a>
+
+
+      <a
+        class="nav-link"
+        href="/favorites.html"
+      >
+        ❤️ Favorites
+      </a>
+      
+
+
+      <a
+        class="cart-link"
+        href="/cart.html"
+      >
+        🛒 Cart
+      </a>
+      <a
+  class="nav-link"
+  href="/login.html"
+>
+  🔐 Login
+</a>
+
+
+    </div>
+
+  </header>
+
+
+  <!-- =====================================================
+       HERO
+  ===================================================== -->
+
+  <section class="hero">
+
+    <div class="hero-badge">
+      🍽️ Delicious food, delivered easily
+    </div>
+
+
+    <h1>
+      Welcome to <span>Gyangmi Eats</span>
+    </h1>
+
+
+    <p>
+      Discover delicious food from your favorite
+      restaurants and order your meal easily.
+    </p>
+
+  </section>
+
+
+  <!-- =====================================================
+       RESTAURANTS
+  ===================================================== -->
+
+  <section class="section">
+
+    <div class="section-title">
+
+      <h2>
+        Restaurants
+      </h2>
+
+
+      <p>
+        Choose a restaurant to see its menu
+      </p>
+
+    </div>
+
+
+    <div
+      id="restaurantList"
+      class="restaurant-list"
+    >
+
+      <div class="message">
+
+        <div class="loading-icon">
+          🍽️
+        </div>
+
+        Loading restaurants...
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =====================================================
+       FOOTER
+  ===================================================== -->
+
+  <footer>
+
+    <div class="footer-logo">
+      Gyangmi Eats
+    </div>
+
+
+    <p>
+      © 2026 Gyangmi Eats. All rights reserved.
+    </p>
+
+  </footer>
+
+
+  <!-- =====================================================
+       JAVASCRIPT
+  ===================================================== -->
+
+  <script>
+
+    // ==========================================
+    // ELEMENT
+    // ==========================================
+
+    const restaurantList =
+      document.getElementById("restaurantList");
+
+
+    // ==========================================
+    // RESTAURANT EMOJIS
+    // ==========================================
+
+    const restaurantEmojis = [
+      "🌶️",
+      "🥟",
+      "🍛",
+      "🍢",
+      "🍜",
+      "🍗",
+      "🍚",
+      "🥘"
+    ];
+
+
+    // ==========================================
+    // START
+    // ==========================================
+
+    loadRestaurants();
+
+
+    // ==========================================
+    // LOAD RESTAURANTS
+    // ==========================================
+
+    async function loadRestaurants() {
+
+      try {
+
+        console.log(
+          "Loading restaurants..."
+        );
+
+
+        const response =
+          await fetch("/restaurants");
+
+
+        if (!response.ok) {
+
+          throw new Error(
+            "Restaurant API failed: " +
+            response.status
+          );
+
+        }
+
+
+        const restaurants =
+          await response.json();
+
+
+        console.log(
+          "Restaurants:",
+          restaurants
+        );
+
+
+        if (
+          !Array.isArray(restaurants) ||
+          restaurants.length === 0
+        ) {
+
+          restaurantList.innerHTML = `
+
+            <div class="message">
+
+              <div class="loading-icon">
+                🍽️
+              </div>
+
+              No restaurants available.
+
+            </div>
+
+          `;
+
+          return;
+
+        }
+
+
+        displayRestaurants(restaurants);
+
+
+      } catch (error) {
+
+        console.error(
+          "Restaurant loading error:",
+          error
+        );
+
+
+        restaurantList.innerHTML = `
+
+          <div class="message error">
+
+            ❌ Failed to load restaurants.
+
+            <br><br>
+
+            <small>
+              ${escapeHtml(error.message)}
+            </small>
+
+          </div>
+
+        `;
+
+      }
+
+    }
+
+
+    // ==========================================
+    // DISPLAY RESTAURANTS
+    // ==========================================
+
+    function displayRestaurants(
+      restaurants
+    ) {
+
+      restaurantList.innerHTML =
+        restaurants
+          .map(
+            (restaurant, index) => {
+
+              const emoji =
+                restaurantEmojis[
+                  index %
+                  restaurantEmojis.length
+                ];
+
+
+              return `
+
+                <div
+                  class="restaurant-card"
+                  role="link"
+                  tabindex="0"
+                  onclick="openRestaurant(${Number(restaurant.id)})"
+                  onkeydown="if(event.key === 'Enter' || event.key === ' ') openRestaurant(${Number(restaurant.id)})"
+                >
+
+                  <div
+                    class="restaurant-image"
+                  >
+                    ${emoji}
+                  </div>
+
+
+                  <div
+                    class="restaurant-content"
+                  >
+
+                    <h3>
+                      ${escapeHtml(
+                        restaurant.name
+                      )}
+                    </h3>
+
+
+                    <p>
+                      ${
+                        escapeHtml(
+                          restaurant.description ||
+                          "Delicious food waiting for you."
+                        )
+                      }
+                    </p>
+
+
+                    <div class="restaurant-actions">
+                      <a
+                        class="view-menu"
+                        href="/menu.html?restaurant_id=${encodeURIComponent(
+                          restaurant.id
+                        )}"
+                      >
+                        View Menu
+                      </a>
+
+                      <button
+                        class="favorite-button"
+                        type="button"
+                        onclick="addFavorite(event, ${Number(restaurant.id)})"
+                      >
+                        ❤️ Favorite
+                      </button>
+                    </div>
+
+                  </div>
+
+                </div>
+
+              `;
+
+            }
+          )
+          .join("");
+
+    }
+
+
+    function openRestaurant(restaurantId) {
+      window.location.href =
+        "/menu.html?restaurant_id=" +
+        encodeURIComponent(Number(restaurantId));
+    }
+
+    async function addFavorite(event, restaurantId) {
+      event.preventDefault();
+      event.stopPropagation();
+
+      let user = null;
+      try {
+        user = JSON.parse(
+          localStorage.getItem("gyangmiUser") ||
+          localStorage.getItem("user") ||
+          "null"
+        );
+      } catch (error) {
+        user = null;
+      }
+
+      const userId = Number(user?.id);
+
+      if (!Number.isInteger(userId) || userId <= 0) {
+        alert("Please login to save favorites.");
+        window.location.href = "/login.html";
+        return;
+      }
+
+      try {
+        const response = await fetch("/favorites", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            user_id: userId,
+            restaurant_id: Number(restaurantId)
+          })
+        });
+
+        const data = await response.json().catch(() => ({}));
+
+        if (!response.ok) {
+          throw new Error(data.message || "Could not save favorite.");
+        }
+
+        alert(data.already_exists
+          ? "This restaurant is already in your favorites."
+          : "Restaurant added to favorites ❤️");
+      } catch (error) {
+        console.error("Favorite error:", error);
+        alert(error.message);
+      }
+    }
+
+    // ==========================================
+    // HTML SAFETY
+    // ==========================================
+
+    function escapeHtml(value) {
+
+      return String(value)
+        .replace(
+          /&/g,
+          "&amp;"
+        )
+        .replace(
+          /</g,
+          "&lt;"
+        )
+        .replace(
+          />/g,
+          "&gt;"
+        )
+        .replace(
+          /"/g,
+          "&quot;"
+        )
+        .replace(
+          /'/g,
+          "&#039;"
+        );
+
+    }
+
+  </script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,5 @@
+-- MySQLShell dump 2.0.1  Distrib Ver 26.7.1 for macos15 on arm64 - for MySQL 26.7.0 (MySQL Community Server (GPL)), for macos15 (arm64)
+--
+-- Host: localhost
+-- ------------------------------------------------------
+-- Server version	26.7.0
