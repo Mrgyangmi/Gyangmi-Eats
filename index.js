@@ -14,7 +14,8 @@ app.use(cors());
 app.use(express.json());
 
 app.use(express.static(__dirname + "/frontend"));
- 
+
+
 // Health check
 app.get("/api/health", (req, res) => {
   res.json({
@@ -299,9 +300,44 @@ app.post(
 
 // Get all menus
 app.get("/menus", (req, res) => {
+
+  // Prevent browser / proxy from using old menu data
+  res.set({
+    "Cache-Control":
+      "no-store, no-cache, must-revalidate, proxy-revalidate",
+    "Pragma": "no-cache",
+    "Expires": "0"
+  });
+
+  const {
+    restaurant_id
+  } = req.query;
+
+  let sql =
+    "SELECT * FROM Menus";
+
+  const params = [];
+
+  // If restaurant_id is provided,
+  // show only that restaurant's menus
+  if (restaurant_id) {
+    sql +=
+      " WHERE restaurant_id = ?";
+
+    params.push(
+      restaurant_id
+    );
+  }
+
+  // Always return menus in ID order
+  sql +=
+    " ORDER BY id ASC";
+
   db.query(
-    "SELECT * FROM Menus",
+    sql,
+    params,
     (err, results) => {
+
       if (err) {
         console.log(
           "Menu query failed:",
@@ -310,8 +346,19 @@ app.get("/menus", (req, res) => {
 
         return res
           .status(500)
-          .send("Menu query failed");
+          .json({
+            success: false,
+            error: "Menu query failed",
+            message: err.message
+          });
       }
+
+      console.log(
+        `Menus loaded: ${results.length} items`,
+        restaurant_id
+          ? `for restaurant ${restaurant_id}`
+          : "for all restaurants"
+      );
 
       res.json(results);
     }
@@ -427,13 +474,13 @@ app.post("/addresses", (req, res) => {
 
       res.status(201).json({
         success: true,
-        message: "Address added successfully!",
+        message:
+          "Address added successfully!",
         id: result.insertId
       });
     }
   );
 });
-
 
 
 // =====================================================
@@ -772,60 +819,127 @@ app.get("/orders/:id", (req, res) => {
 
 // Create new order
 app.post("/orders", (req, res) => {
-  const { user_id, restaurant_id, total_amount, status } = req.body;
-  const userId = Number(user_id);
-  const restaurantId = Number(restaurant_id);
-  const total = Number(total_amount);
-  const orderStatus = status || "Pending";
+  const {
+    user_id,
+    restaurant_id,
+    total_amount,
+    status
+  } = req.body;
 
-  if (!Number.isInteger(userId) || userId <= 0) {
-    return res.status(400).json({ success: false, message: "Valid user_id is required" });
+  const userId =
+    Number(user_id);
+
+  const restaurantId =
+    Number(restaurant_id);
+
+  const total =
+    Number(total_amount);
+
+  const orderStatus =
+    status || "Pending";
+
+  if (
+    !Number.isInteger(userId) ||
+    userId <= 0
+  ) {
+    return res.status(400).json({
+      success: false,
+      message:
+        "Valid user_id is required"
+    });
   }
-  if (!Number.isInteger(restaurantId) || restaurantId <= 0) {
-    return res.status(400).json({ success: false, message: "Valid restaurant_id is required" });
+
+  if (
+    !Number.isInteger(restaurantId) ||
+    restaurantId <= 0
+  ) {
+    return res.status(400).json({
+      success: false,
+      message:
+        "Valid restaurant_id is required"
+    });
   }
-  if (!Number.isFinite(total) || total < 0) {
-    return res.status(400).json({ success: false, message: "Valid total_amount is required" });
+
+  if (
+    !Number.isFinite(total) ||
+    total < 0
+  ) {
+    return res.status(400).json({
+      success: false,
+      message:
+        "Valid total_amount is required"
+    });
   }
 
-  const sql = "INSERT INTO Orders (user_id, restaurant_id, total_amount, status) VALUES (?, ?, ?, ?)";
+  const sql =
+    "INSERT INTO Orders (user_id, restaurant_id, total_amount, status) VALUES (?, ?, ?, ?)";
 
-  db.query(sql, [userId, restaurantId, total, orderStatus], (err, result) => {
-    if (err) {
-      console.log("Order insert failed:", err);
-      return res.status(500).json({ success: false, message: "Order creation failed" });
-    }
+  db.query(
+    sql,
+    [
+      userId,
+      restaurantId,
+      total,
+      orderStatus
+    ],
+    (err, result) => {
 
-    const orderId = result.insertId;
+      if (err) {
+        console.log(
+          "Order insert failed:",
+          err
+        );
 
-    // Create the delivery record automatically. Admin can assign a driver later.
-    db.query(
-      "INSERT INTO Deliveries (order_id, driver_id, status) VALUES (?, NULL, ?)",
-      [orderId, "Assigned"],
-      (deliveryErr, deliveryResult) => {
-        if (deliveryErr) {
-          console.error("Delivery creation failed:", deliveryErr);
-          return res.status(201).json({
-            success: true,
-            message: "Order created, but delivery record could not be created.",
-            id: orderId,
-            order_id: orderId,
-            delivery_id: null,
-            delivery_created: false
-          });
-        }
-
-        res.status(201).json({
-          success: true,
-          message: "Order created successfully!",
-          id: orderId,
-          order_id: orderId,
-          delivery_id: deliveryResult.insertId,
-          delivery_created: true
+        return res.status(500).json({
+          success: false,
+          message:
+            "Order creation failed"
         });
       }
-    );
-  });
+
+      const orderId =
+        result.insertId;
+
+      // Create delivery record automatically
+      db.query(
+        "INSERT INTO Deliveries (order_id, driver_id, status) VALUES (?, NULL, ?)",
+        [
+          orderId,
+          "Assigned"
+        ],
+        (deliveryErr, deliveryResult) => {
+
+          if (deliveryErr) {
+            console.error(
+              "Delivery creation failed:",
+              deliveryErr
+            );
+
+            return res.status(201).json({
+              success: true,
+              message:
+                "Order created, but delivery record could not be created.",
+              id: orderId,
+              order_id: orderId,
+              delivery_id: null,
+              delivery_created: false
+            });
+          }
+
+          res.status(201).json({
+            success: true,
+            message:
+              "Order created successfully!",
+            id: orderId,
+            order_id: orderId,
+            delivery_id:
+              deliveryResult.insertId,
+            delivery_created: true
+          });
+        }
+      );
+    }
+  );
 });
 
 
@@ -861,6 +975,7 @@ app.get("/order-items", (req, res) => {
 app.get(
   "/order-items/:order_id",
   (req, res) => {
+
     const orderId =
       req.params.order_id;
 
@@ -868,6 +983,7 @@ app.get(
       "SELECT * FROM OrderItems WHERE order_id = ?",
       [orderId],
       (err, results) => {
+
         if (err) {
           console.log(
             "Order items query failed:",
@@ -909,6 +1025,7 @@ app.post("/order-items", (req, res) => {
       price
     ],
     (err, result) => {
+
       if (err) {
         console.log(
           "Order item insert failed:",
@@ -924,7 +1041,8 @@ app.post("/order-items", (req, res) => {
 
       res.status(201).json({
         success: true,
-        message: "Order item added successfully!",
+        message:
+          "Order item added successfully!",
         id: result.insertId
       });
     }
@@ -941,6 +1059,7 @@ app.get("/payments", (req, res) => {
   db.query(
     "SELECT * FROM Payments",
     (err, results) => {
+
       if (err) {
         console.log(
           "Payment query failed:",
@@ -964,6 +1083,7 @@ app.get("/payments", (req, res) => {
 app.get(
   "/payments/:order_id",
   (req, res) => {
+
     const orderId =
       req.params.order_id;
 
@@ -971,6 +1091,7 @@ app.get(
       "SELECT * FROM Payments WHERE order_id = ?",
       [orderId],
       (err, results) => {
+
         if (err) {
           console.log(
             "Payment query failed:",
@@ -993,6 +1114,7 @@ app.get(
 
 // Create payment
 app.post("/payments", (req, res) => {
+
   const {
     order_id,
     amount,
@@ -1014,6 +1136,7 @@ app.post("/payments", (req, res) => {
       paid_at || null
     ],
     (err, result) => {
+
       if (err) {
         console.log(
           "Payment insert failed:",
@@ -1029,7 +1152,8 @@ app.post("/payments", (req, res) => {
 
       res.status(201).json({
         success: true,
-        message: "Payment added successfully!",
+        message:
+          "Payment added successfully!",
         id: result.insertId
       });
     }
@@ -1043,9 +1167,11 @@ app.post("/payments", (req, res) => {
 
 // Get all reviews
 app.get("/reviews", (req, res) => {
+
   db.query(
     "SELECT * FROM Reviews",
     (err, results) => {
+
       if (err) {
         console.log(
           "Review query failed:",
@@ -1067,6 +1193,7 @@ app.get("/reviews", (req, res) => {
 
 // Add review
 app.post("/reviews", (req, res) => {
+
   const {
     user_id,
     restaurant_id,
@@ -1086,6 +1213,7 @@ app.post("/reviews", (req, res) => {
       comment
     ],
     (err, result) => {
+
       if (err) {
         console.log(
           "Review insert failed:",
@@ -1115,9 +1243,11 @@ app.post("/reviews", (req, res) => {
 app.get(
   "/delivery-drivers",
   (req, res) => {
+
     db.query(
       "SELECT * FROM DeliveryDrivers",
       (err, results) => {
+
         if (err) {
           console.log(
             "Driver query failed:",
@@ -1142,6 +1272,7 @@ app.get(
 app.post(
   "/delivery-drivers",
   (req, res) => {
+
     const {
       name,
       phone,
@@ -1163,6 +1294,7 @@ app.post(
         status || "Available"
       ],
       (err, result) => {
+
         if (err) {
           console.log(
             "Driver insert failed:",
@@ -1193,9 +1325,11 @@ app.post(
 app.get(
   "/deliveries",
   (req, res) => {
+
     db.query(
       "SELECT * FROM Deliveries",
       (err, results) => {
+
         if (err) {
           console.log(
             "Delivery query failed:",
@@ -1220,6 +1354,7 @@ app.get(
 app.post(
   "/deliveries",
   (req, res) => {
+
     const {
       order_id,
       driver_id,
@@ -1241,6 +1376,7 @@ app.post(
         delivery_time || null
       ],
       (err, result) => {
+
         if (err) {
           console.log(
             "Delivery insert failed:",
@@ -1272,9 +1408,11 @@ app.post(
 
 // Get all coupons
 app.get("/coupons", (req, res) => {
+
   db.query(
     "SELECT * FROM Coupons",
     (err, results) => {
+
       if (err) {
         console.log(
           "Coupon query failed:",
@@ -1296,6 +1434,7 @@ app.get("/coupons", (req, res) => {
 
 // Create coupon
 app.post("/coupons", (req, res) => {
+
   const {
     code,
     discount_type,
@@ -1317,6 +1456,7 @@ app.post("/coupons", (req, res) => {
       expiry_date
     ],
     (err, result) => {
+
       if (err) {
         console.log(
           "Coupon insert failed:",
@@ -1346,9 +1486,11 @@ app.post("/coupons", (req, res) => {
 app.get(
   "/favorites",
   (req, res) => {
+
     db.query(
       "SELECT * FROM Favorites",
       (err, results) => {
+
         if (err) {
           console.log(
             "Favorite query failed:",
@@ -1373,32 +1515,47 @@ app.get(
 app.post(
   "/favorites",
   (req, res) => {
-    const userId = Number(req.body.user_id);
-    const restaurantId = Number(req.body.restaurant_id);
 
-    if (!Number.isInteger(userId) || userId <= 0 ||
-        !Number.isInteger(restaurantId) || restaurantId <= 0) {
+    const userId =
+      Number(req.body.user_id);
+
+    const restaurantId =
+      Number(req.body.restaurant_id);
+
+    if (
+      !Number.isInteger(userId) ||
+      userId <= 0 ||
+      !Number.isInteger(restaurantId) ||
+      restaurantId <= 0
+    ) {
       return res.status(400).json({
         success: false,
-        message: "Valid user_id and restaurant_id are required"
+        message:
+          "Valid user_id and restaurant_id are required"
       });
     }
 
     db.query(
       "SELECT id FROM Favorites WHERE user_id = ? AND restaurant_id = ?",
-      [userId, restaurantId],
+      [
+        userId,
+        restaurantId
+      ],
       (checkErr, rows) => {
+
         if (checkErr) {
           return res.status(500).json({
             success: false,
-            message: "Favorite lookup failed"
+            message:
+              "Favorite lookup failed"
           });
         }
 
         if (rows.length > 0) {
           return res.status(200).json({
             success: true,
-            message: "Restaurant is already in favorites.",
+            message:
+              "Restaurant is already in favorites.",
             id: rows[0].id,
             already_exists: true
           });
@@ -1406,19 +1563,29 @@ app.post(
 
         db.query(
           "INSERT INTO Favorites (user_id, restaurant_id) VALUES (?, ?)",
-          [userId, restaurantId],
+          [
+            userId,
+            restaurantId
+          ],
           (err, result) => {
+
             if (err) {
-              console.log("Favorite insert failed:", err);
+              console.log(
+                "Favorite insert failed:",
+                err
+              );
+
               return res.status(500).json({
                 success: false,
-                message: "Favorite creation failed"
+                message:
+                  "Favorite creation failed"
               });
             }
 
             res.status(201).json({
               success: true,
-              message: "Favorite added successfully!",
+              message:
+                "Favorite added successfully!",
               id: result.insertId
             });
           }
@@ -1436,6 +1603,7 @@ app.post(
 app.delete(
   "/favorites/:id",
   (req, res) => {
+
     const id =
       req.params.id;
 
@@ -1443,6 +1611,7 @@ app.delete(
       "DELETE FROM Favorites WHERE id = ?",
       [id],
       (err, result) => {
+
         if (err) {
           console.log(
             "Favorite delete failed:",
@@ -1508,7 +1677,6 @@ app.patch(
       status
     );
 
-
     if (!status) {
       return res
         .status(400)
@@ -1519,7 +1687,6 @@ app.patch(
         });
     }
 
-
     const allowedStatuses = [
       "Pending",
       "Confirmed",
@@ -1528,7 +1695,6 @@ app.patch(
       "Delivered",
       "Cancelled"
     ];
-
 
     if (
       !allowedStatuses.includes(status)
@@ -1541,7 +1707,6 @@ app.patch(
             "Invalid order status"
         });
     }
-
 
     db.query(
       "SELECT id FROM Orders WHERE id = ?",
@@ -1563,7 +1728,6 @@ app.patch(
             });
         }
 
-
         if (rows.length === 0) {
           return res
             .status(404)
@@ -1573,7 +1737,6 @@ app.patch(
                 "Order not found"
             });
         }
-
 
         db.query(
           "UPDATE Orders SET status = ? WHERE id = ?",
@@ -1598,11 +1761,9 @@ app.patch(
                 });
             }
 
-
             console.log(
               `Order #${orderId} updated to ${status}`
             );
-
 
             res.json({
               success: true,
@@ -1613,13 +1774,10 @@ app.patch(
               status:
                 status
             });
-
           }
         );
-
       }
     );
-
   }
 );
 
@@ -1639,7 +1797,6 @@ app.patch(
       driver_id
     } = req.body;
 
-
     console.log(
       "DELIVERY DRIVER UPDATE"
     );
@@ -1653,7 +1810,6 @@ app.patch(
       "Driver ID:",
       driver_id
     );
-
 
     if (
       driver_id === undefined ||
@@ -1670,10 +1826,8 @@ app.patch(
         });
     }
 
-
     const numericDriverId =
       Number(driver_id);
-
 
     if (
       !Number.isInteger(numericDriverId) ||
@@ -1688,7 +1842,6 @@ app.patch(
             "Invalid Driver ID"
         });
     }
-
 
     // Check driver exists
     db.query(
@@ -1712,7 +1865,6 @@ app.patch(
             });
         }
 
-
         if (
           drivers.length === 0
         ) {
@@ -1725,7 +1877,6 @@ app.patch(
                 "Driver not found"
             });
         }
-
 
         // Check delivery exists
         db.query(
@@ -1749,7 +1900,6 @@ app.patch(
                 });
             }
 
-
             if (
               deliveries.length === 0
             ) {
@@ -1763,29 +1913,37 @@ app.patch(
                 });
             }
 
-
             // Assign driver
             db.query(
               "SELECT driver_id FROM Deliveries WHERE id = ?",
               [deliveryId],
               (oldErr, oldRows) => {
+
                 if (oldErr) {
                   return res.status(500).json({
                     success: false,
-                    message: "Existing driver lookup failed"
+                    message:
+                      "Existing driver lookup failed"
                   });
                 }
 
-                const oldDriverId = oldRows[0]?.driver_id || null;
+                const oldDriverId =
+                  oldRows[0]?.driver_id ||
+                  null;
 
                 db.query(
                   "UPDATE Deliveries SET driver_id = ? WHERE id = ?",
-                  [numericDriverId, deliveryId],
+                  [
+                    numericDriverId,
+                    deliveryId
+                  ],
                   (updateErr) => {
+
                     if (updateErr) {
                       return res.status(500).json({
                         success: false,
-                        message: "Driver assignment failed"
+                        message:
+                          "Driver assignment failed"
                       });
                     }
 
@@ -1793,30 +1951,46 @@ app.patch(
                       "UPDATE DeliveryDrivers SET status = 'Busy' WHERE id = ?",
                       [numericDriverId],
                       (busyErr) => {
+
                         if (busyErr) {
-                          console.error("Driver busy-status update failed:", busyErr);
+                          console.error(
+                            "Driver busy-status update failed:",
+                            busyErr
+                          );
                         }
 
+                        const sendSuccess = () => {
+                          console.log(
+                            `Driver #${numericDriverId} assigned to Delivery #${deliveryId}`
+                          );
+
+                          res.json({
+                            success: true,
+                            message:
+                              "Driver assigned successfully!",
+                            delivery_id:
+                              Number(deliveryId),
+                            driver_id:
+                              numericDriverId
+                          });
+                        };
+
                         const releaseOldDriver = () => {
-                          if (!oldDriverId || Number(oldDriverId) === numericDriverId) {
+
+                          if (
+                            !oldDriverId ||
+                            Number(oldDriverId) ===
+                              numericDriverId
+                          ) {
                             return sendSuccess();
                           }
 
                           db.query(
                             "UPDATE DeliveryDrivers SET status = 'Available' WHERE id = ?",
                             [oldDriverId],
-                            () => sendSuccess()
+                            () =>
+                              sendSuccess()
                           );
-                        };
-
-                        const sendSuccess = () => {
-                          console.log(`Driver #${numericDriverId} assigned to Delivery #${deliveryId}`);
-                          res.json({
-                            success: true,
-                            message: "Driver assigned successfully!",
-                            delivery_id: Number(deliveryId),
-                            driver_id: numericDriverId
-                          });
                         };
 
                         releaseOldDriver();
@@ -1826,13 +2000,10 @@ app.patch(
                 );
               }
             );
-
           }
         );
-
       }
     );
-
   }
 );
 
@@ -1852,7 +2023,6 @@ app.patch(
     const {
       status
     } = req.body;
-
 
     console.log(
       "================================="
@@ -1876,11 +2046,7 @@ app.patch(
       "================================="
     );
 
-
-    // -------------------------------------------------
     // Allowed delivery statuses
-    // -------------------------------------------------
-
     const allowedStatuses = [
       "Assigned",
       "Picked Up",
@@ -1888,7 +2054,6 @@ app.patch(
       "Delivered",
       "Cancelled"
     ];
-
 
     if (!status) {
 
@@ -1900,7 +2065,6 @@ app.patch(
             "Status is required"
         });
     }
-
 
     if (
       !allowedStatuses.includes(status)
@@ -1915,11 +2079,7 @@ app.patch(
         });
     }
 
-
-    // -------------------------------------------------
     // Find delivery + connected order
-    // -------------------------------------------------
-
     db.query(
       "SELECT id, order_id, status, pickup_time, delivery_time FROM Deliveries WHERE id = ?",
       [deliveryId],
@@ -1941,7 +2101,6 @@ app.patch(
             });
         }
 
-
         if (
           deliveryRows.length === 0
         ) {
@@ -1955,20 +2114,14 @@ app.patch(
             });
         }
 
-
         const delivery =
           deliveryRows[0];
 
         const orderId =
           delivery.order_id;
 
-
-        // -------------------------------------------------
         // Convert delivery status → order status
-        // -------------------------------------------------
-
         let orderStatus = null;
-
 
         if (
           status === "Assigned"
@@ -2006,14 +2159,9 @@ app.patch(
             "Cancelled";
         }
 
-
-        // -------------------------------------------------
         // Update delivery status + time
-        // -------------------------------------------------
-
         let deliverySQL = "";
         let deliveryValues = [];
-
 
         if (
           status === "Picked Up"
@@ -2063,7 +2211,6 @@ app.patch(
           ];
         }
 
-
         db.query(
           deliverySQL,
           deliveryValues,
@@ -2085,11 +2232,7 @@ app.patch(
                 });
             }
 
-
-            // -------------------------------------------------
             // Sync Order status
-            // -------------------------------------------------
-
             if (
               orderStatus
             ) {
@@ -2122,7 +2265,6 @@ app.patch(
                       });
                   }
 
-
                   console.log(
                     `Delivery #${deliveryId} updated to ${status}`
                   );
@@ -2130,7 +2272,6 @@ app.patch(
                   console.log(
                     `Order #${orderId} automatically updated to ${orderStatus}`
                   );
-
 
                   return res.json({
                     success: true,
@@ -2150,7 +2291,6 @@ app.patch(
                     order_status:
                       orderStatus
                   });
-
                 }
               );
 
@@ -2168,15 +2308,11 @@ app.patch(
                 delivery_status:
                   status
               });
-
             }
-
           }
         );
-
       }
     );
-
   }
 );
 
@@ -2187,7 +2323,6 @@ app.patch(
 
 const PORT =
   process.env.PORT || 3000;
-
 
 app.listen(
   PORT,
